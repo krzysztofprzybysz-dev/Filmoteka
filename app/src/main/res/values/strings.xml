@@ -45,6 +45,7 @@
     <string name="content_desc_date_range_icon">Wybierz datę</string>
     <string name="content_desc_arrow_drop_down">Rozwiń listę</string>
     <string name="content_desc_play_arrow_icon">Ikona zastępcza plakatu</string>
+    <string name="delete_dialog_message_with_title">Czy na pewno chcesz usunąć \"%1$s\" z kolekcji?</string>
 
     <string name="film_details_screen_title">Szczegóły filmu</string>
     <string name="film_details_error_not_found">Nie znaleziono filmu.</string>

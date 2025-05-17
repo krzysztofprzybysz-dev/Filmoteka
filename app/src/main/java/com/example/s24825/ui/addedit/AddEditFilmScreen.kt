@@ -48,6 +48,7 @@ fun AddEditFilmScreen(
         factory = FilmEditViewModel.Factory(app.repository, filmId, app.imageUtils, app)
     )
 
+    // Stany pobierane z ViewModelu
     val title by viewModel.title.collectAsState()
     val releaseDate by viewModel.releaseDate.collectAsState()
     val category by viewModel.category.collectAsState()
@@ -59,24 +60,26 @@ fun AddEditFilmScreen(
     val validationErrors by viewModel.validationErrors.collectAsState()
     val isSaved by viewModel.isSaved.collectAsState()
 
-    val dateFormat = SimpleDateFormat("dd.MM.yyyy", Locale.getDefault())
+    // Formatter daty
+    val dateFormat = remember { SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()) }
 
+    // Launcher do wybierania obrazu
     val imagePicker = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         uri?.let { viewModel.selectPoster(it) }
     }
 
+    // Efekt uruchamiany po zapisaniu filmu
     LaunchedEffect(isSaved) {
         if (isSaved) {
             onSaveClick()
         }
     }
 
-    var showCategoryDropdown by remember { mutableStateOf(false) }
-    var showDatePickerDialog by remember { mutableStateOf(false) }
-
-    val screenTitle = if (filmId > 0) stringResource(R.string.edit_film_screen_title) else stringResource(R.string.add_film_screen_title)
+    // Tytuł ekranu w zależności od trybu (dodawanie/edycja)
+    val screenTitle = if (filmId > 0) stringResource(R.string.edit_film_screen_title)
+    else stringResource(R.string.add_film_screen_title)
 
     Scaffold(
         topBar = {
@@ -104,251 +107,290 @@ fun AddEditFilmScreen(
                 .padding(innerPadding)
         ) {
             if (isLoading) {
+                // Wskaźnik ładowania
                 CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             } else {
+                // Główna kolumna formularza
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
                         .verticalScroll(rememberScrollState())
                         .padding(16.dp)
                 ) {
-                    // Title field
-                    OutlinedTextField(
-                        value = title,
-                        onValueChange = { viewModel.setTitle(it) },
-                        label = { Text(stringResource(R.string.add_edit_label_title)) },
-                        modifier = Modifier.fillMaxWidth(),
-                        isError = validationErrors.containsKey("title"),
-                        supportingText = {
-                            validationErrors["title"]?.let { errorResId ->
-                                Text(text = stringResource(id = errorResId))
-                            }
-                        },
-                        singleLine = true
-                    )
-
+                    // Poszczególne pola formularza jako osobne komponenty
+                    TitleInputField(title, viewModel::setTitle, validationErrors["title"])
                     Spacer(modifier = Modifier.height(16.dp))
-
-                    // Date picker field
-                    OutlinedTextField(
-                        value = dateFormat.format(releaseDate),
-                        onValueChange = { /* Read-only, handled by DatePickerDialog */ },
-                        label = { Text(stringResource(R.string.add_edit_label_release_date)) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .clickable { showDatePickerDialog = true }, // Otwiera DatePickerDialog
-                        readOnly = true,
-                        trailingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.DateRange,
-                                contentDescription = stringResource(R.string.content_desc_date_range_icon),
-                                modifier = Modifier.clickable { showDatePickerDialog = true }
-                            )
-                        },
-                        isError = validationErrors.containsKey("releaseDate"),
-                        supportingText = {
-                            validationErrors["releaseDate"]?.let { errorResId ->
-                                Text(text = stringResource(id = errorResId))
-                            }
-                        }
-                    )
-                    // DatePickerDialog
-                    if (showDatePickerDialog) {
-                        val calendar = Calendar.getInstance().apply { time = releaseDate }
-                        val datePickerState = rememberDatePickerState(
-                            initialSelectedDateMillis = calendar.timeInMillis
-                        )
-                        DatePickerDialog(
-                            onDismissRequest = { showDatePickerDialog = false },
-                            confirmButton = {
-                                TextButton(onClick = {
-                                    datePickerState.selectedDateMillis?.let { millis ->
-                                        viewModel.setReleaseDate(Date(millis))
-                                    }
-                                    showDatePickerDialog = false
-                                }) {
-                                    Text(stringResource(android.R.string.ok))
-                                }
-                            },
-                            dismissButton = {
-                                TextButton(onClick = { showDatePickerDialog = false }) {
-                                    Text(stringResource(android.R.string.cancel))
-                                }
-                            }
-                        ) {
-                            DatePicker(
-                                state = datePickerState,
-                                dateValidator = { timestamp ->
-                                    val maxDateCalendar = Calendar.getInstance().apply { add(Calendar.YEAR, 2) }
-                                    timestamp <= maxDateCalendar.timeInMillis
-                                }
-                            )
-                        }
-                    }
-
+                    ReleaseDateInputField(releaseDate, viewModel::setReleaseDate, validationErrors["releaseDate"], dateFormat)
                     Spacer(modifier = Modifier.height(16.dp))
-
-                    // Category dropdown
-                    Box(modifier = Modifier.fillMaxWidth()) {
-                        OutlinedTextField(
-                            value = category.ifEmpty { stringResource(R.string.add_edit_label_category) },
-                            onValueChange = { },
-                            label = { Text(stringResource(R.string.add_edit_label_category)) },
-                            modifier = Modifier // Corrected: Only one modifier parameter
-                                .fillMaxWidth()
-                                .clickable { showCategoryDropdown = true }, // Całe pole klikalne
-                            readOnly = true,
-                            trailingIcon = {
-                                Icon(
-                                    imageVector = Icons.Default.ArrowDropDown,
-                                    contentDescription = stringResource(R.string.content_desc_arrow_drop_down)
-                                )
-                            },
-                            isError = validationErrors.containsKey("category"),
-                            supportingText = {
-                                validationErrors["category"]?.let { errorResId ->
-                                    Text(text = stringResource(id = errorResId))
-                                }
-                            }
-                        )
-                        DropdownMenu(
-                            expanded = showCategoryDropdown,
-                            onDismissRequest = { showCategoryDropdown = false }
-                        ) {
-                            FilmCategories.categories.forEach { categoryOption ->
-                                DropdownMenuItem(
-                                    text = { Text(categoryOption) },
-                                    onClick = {
-                                        viewModel.setCategory(categoryOption)
-                                        showCategoryDropdown = false
-                                    }
-                                )
-                            }
-                        }
-                    }
-
+                    CategoryInputField(category, viewModel::setCategory, validationErrors["category"])
                     Spacer(modifier = Modifier.height(16.dp))
-
-                    // Watched status switch
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            text = stringResource(R.string.add_edit_label_status),
-                            style = MaterialTheme.typography.bodyLarge,
-                            modifier = Modifier.weight(1f)
-                        )
-                        Text(
-                            text = if (isWatched) stringResource(R.string.add_edit_status_watched) else stringResource(R.string.add_edit_status_unwatched),
-                            style = MaterialTheme.typography.bodyMedium
-                        )
-                        Spacer(modifier = Modifier.width(8.dp))
-                        Switch(
-                            checked = isWatched,
-                            onCheckedChange = { viewModel.setWatched(it) }
-                        )
-                    }
-
-                    // Rating field (only shown when watched is true)
+                    WatchedStatusSwitch(isWatched, viewModel::setWatched)
                     if (isWatched) {
                         Spacer(modifier = Modifier.height(16.dp))
-                        OutlinedTextField(
-                            value = rating?.toString() ?: "",
-                            onValueChange = {
-                                val newRating = it.toIntOrNull()
-                                if (it.isEmpty()) {
-                                    viewModel.setRating(null)
-                                } else if (newRating != null && newRating in 1..10) {
-                                    viewModel.setRating(newRating)
-                                } else if (newRating == null && it.length <= 2) {
-                                    // Allow typing if not a valid number yet but not too long
-                                }
-                            },
-                            label = { Text(stringResource(R.string.add_edit_label_rating)) },
-                            modifier = Modifier.fillMaxWidth(),
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                            isError = validationErrors.containsKey("rating"),
-                            supportingText = {
-                                validationErrors["rating"]?.let { errorResId ->
-                                    Text(text = stringResource(id = errorResId))
-                                } ?: Text(stringResource(R.string.add_edit_hint_rating))
-                            },
-                            singleLine = true
-                        )
+                        RatingInputField(rating, viewModel::setRating, validationErrors["rating"])
                     }
-
                     Spacer(modifier = Modifier.height(16.dp))
-
-                    // Comment field
-                    OutlinedTextField(
-                        value = comment ?: "",
-                        onValueChange = { viewModel.setComment(it) },
-                        label = { Text(stringResource(R.string.add_edit_label_comment)) },
-                        modifier = Modifier.fillMaxWidth(),
-                        minLines = 3
-                    )
-
+                    CommentInputField(comment, viewModel::setComment)
                     Spacer(modifier = Modifier.height(16.dp))
-
-                    // Poster selection
-                    Text(
-                        text = stringResource(R.string.add_edit_label_poster),
-                        style = MaterialTheme.typography.bodyLarge
-                    )
-                    Spacer(modifier = Modifier.height(8.dp)) // Corrected from Modifier.height
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(200.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                            .border(
-                                width = 1.dp,
-                                color = MaterialTheme.colorScheme.outline,
-                                shape = RoundedCornerShape(8.dp)
-                            )
-                            .clickable { imagePicker.launch("image/*") },
-                        contentAlignment = Alignment.Center
-                    ) {
-                        if (posterPath != null) {
-                            AsyncImage(
-                                model = ImageRequest.Builder(LocalContext.current)
-                                    .data(posterPath)
-                                    .crossfade(true)
-                                    .build(),
-                                contentDescription = stringResource(R.string.film_item_poster_description),
-                                contentScale = ContentScale.Fit,
-                                modifier = Modifier.fillMaxSize()
-                            )
-                        } else {
-                            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                                Icon(
-                                    imageVector = Icons.Default.PlayArrow,
-                                    contentDescription = stringResource(R.string.content_desc_play_arrow_icon),
-                                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
-                                    modifier = Modifier.size(40.dp)
-                                )
-                                Spacer(modifier = Modifier.height(8.dp))
-                                Text(
-                                    text = stringResource(R.string.add_edit_select_poster_from_gallery),
-                                    style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                                )
-                            }
-                        }
-                    }
-
+                    PosterInputField(posterPath, imagePicker::launch)
                     Spacer(modifier = Modifier.height(24.dp))
-
-                    Button(
-                        onClick = { viewModel.saveFilm() },
-                        modifier = Modifier.fillMaxWidth(),
-                        enabled = !isLoading
-                    ) {
-                        Text(stringResource(R.string.add_edit_save_button))
-                    }
+                    SaveButton(isLoading, viewModel::saveFilm)
                 }
             }
         }
+    }
+}
+
+// Prywatne funkcje Composable dla każdego pola formularza
+// To czyni główną funkcję AddEditFilmScreen bardziej czytelną
+
+@Composable
+private fun TitleInputField(
+    title: String,
+    onTitleChange: (String) -> Unit,
+    errorResId: Int?
+) {
+    OutlinedTextField(
+        value = title,
+        onValueChange = onTitleChange,
+        label = { Text(stringResource(R.string.add_edit_label_title)) },
+        modifier = Modifier.fillMaxWidth(),
+        isError = errorResId != null,
+        supportingText = {
+            errorResId?.let { Text(text = stringResource(id = it)) }
+        },
+        singleLine = true
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ReleaseDateInputField(
+    releaseDate: Date,
+    onReleaseDateChange: (Date) -> Unit,
+    errorResId: Int?,
+    dateFormat: SimpleDateFormat
+) {
+    var showDatePickerDialog by remember { mutableStateOf(false) }
+
+    OutlinedTextField(
+        value = dateFormat.format(releaseDate),
+        onValueChange = { /* Read-only */ },
+        label = { Text(stringResource(R.string.add_edit_label_release_date)) },
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { showDatePickerDialog = true },
+        readOnly = true,
+        trailingIcon = {
+            Icon(
+                imageVector = Icons.Default.DateRange,
+                contentDescription = stringResource(R.string.content_desc_date_range_icon),
+                modifier = Modifier.clickable { showDatePickerDialog = true }
+            )
+        },
+        isError = errorResId != null,
+        supportingText = {
+            errorResId?.let { Text(text = stringResource(id = it)) }
+        }
+    )
+
+    if (showDatePickerDialog) {
+        val currentCalendar = Calendar.getInstance().apply { time = releaseDate }
+        val datePickerState = rememberDatePickerState(initialSelectedDateMillis = currentCalendar.timeInMillis)
+        DatePickerDialog(
+            onDismissRequest = { showDatePickerDialog = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    datePickerState.selectedDateMillis?.let { onReleaseDateChange(Date(it)) }
+                    showDatePickerDialog = false
+                }) { Text(stringResource(android.R.string.ok)) }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDatePickerDialog = false }) { Text(stringResource(android.R.string.cancel)) }
+            }
+        ) {
+            DatePicker(
+                state = datePickerState,
+                dateValidator = { timestamp ->
+                    val maxDateCalendar = Calendar.getInstance().apply { add(Calendar.YEAR, 2) }
+                    timestamp <= maxDateCalendar.timeInMillis
+                }
+            )
+        }
+    }
+}
+
+@Composable
+private fun CategoryInputField(
+    category: String,
+    onCategoryChange: (String) -> Unit,
+    errorResId: Int?
+) {
+    var showCategoryDropdown by remember { mutableStateOf(false) }
+
+    Box(modifier = Modifier.fillMaxWidth()) {
+        OutlinedTextField(
+            value = category,
+            onValueChange = { /* Read-only */ },
+            label = { Text(stringResource(R.string.add_edit_label_category)) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { showCategoryDropdown = true },
+            readOnly = true,
+            trailingIcon = {
+                Icon(
+                    imageVector = Icons.Default.ArrowDropDown,
+                    contentDescription = stringResource(R.string.content_desc_arrow_drop_down)
+                )
+            },
+            isError = errorResId != null,
+            supportingText = {
+                errorResId?.let { Text(text = stringResource(id = it)) }
+            }
+        )
+        DropdownMenu(
+            expanded = showCategoryDropdown,
+            onDismissRequest = { showCategoryDropdown = false }
+        ) {
+            FilmCategories.categories.forEach { categoryOption ->
+                DropdownMenuItem(
+                    text = { Text(categoryOption) },
+                    onClick = {
+                        onCategoryChange(categoryOption)
+                        showCategoryDropdown = false
+                    }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun WatchedStatusSwitch(
+    isWatched: Boolean,
+    onWatchedChange: (Boolean) -> Unit
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text(
+            text = stringResource(R.string.add_edit_label_status),
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.weight(1f)
+        )
+        Text(
+            text = if (isWatched) stringResource(R.string.add_edit_status_watched)
+            else stringResource(R.string.add_edit_status_unwatched),
+            style = MaterialTheme.typography.bodyMedium
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Switch(checked = isWatched, onCheckedChange = onWatchedChange)
+    }
+}
+
+@Composable
+private fun RatingInputField(
+    rating: Int?,
+    onRatingChange: (Int?) -> Unit,
+    errorResId: Int?
+) {
+    OutlinedTextField(
+        value = rating?.toString() ?: "",
+        onValueChange = {
+            val newRating = it.toIntOrNull()
+            if (it.isEmpty()) onRatingChange(null)
+            else if (newRating != null && newRating in 1..10) onRatingChange(newRating)
+            else if (newRating == null && it.length <= 2) { /* Allow intermediate typing */ }
+        },
+        label = { Text(stringResource(R.string.add_edit_label_rating)) },
+        modifier = Modifier.fillMaxWidth(),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        isError = errorResId != null,
+        supportingText = {
+            errorResId?.let { Text(text = stringResource(id = it)) }
+                ?: Text(stringResource(R.string.add_edit_hint_rating))
+        },
+        singleLine = true
+    )
+}
+
+@Composable
+private fun CommentInputField(
+    comment: String?,
+    onCommentChange: (String) -> Unit
+) {
+    OutlinedTextField(
+        value = comment ?: "",
+        onValueChange = onCommentChange,
+        label = { Text(stringResource(R.string.add_edit_label_comment)) },
+        modifier = Modifier.fillMaxWidth(),
+        minLines = 3
+    )
+}
+
+@Composable
+private fun PosterInputField(
+    posterPath: String?,
+    onPosterSelectRequest: (String) -> Unit // Zmieniono typ launchera
+) {
+    Text(
+        text = stringResource(R.string.add_edit_label_poster),
+        style = MaterialTheme.typography.bodyLarge
+    )
+    Spacer(modifier = Modifier.height(8.dp))
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.outline,
+                shape = RoundedCornerShape(8.dp)
+            )
+            .clickable { onPosterSelectRequest("image/*") }, // Wywołanie przekazanej funkcji
+        contentAlignment = Alignment.Center
+    ) {
+        if (posterPath != null) {
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(posterPath)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = stringResource(R.string.film_item_poster_description),
+                contentScale = ContentScale.Fit,
+                modifier = Modifier.fillMaxSize()
+            )
+        } else {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Icon(
+                    imageVector = Icons.Default.PlayArrow,
+                    contentDescription = stringResource(R.string.content_desc_play_arrow_icon),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                    modifier = Modifier.size(40.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = stringResource(R.string.add_edit_select_poster_from_gallery),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun SaveButton(
+    isLoading: Boolean,
+    onSaveClick: () -> Unit
+) {
+    Button(
+        onClick = onSaveClick,
+        modifier = Modifier.fillMaxWidth(),
+        enabled = !isLoading
+    ) {
+        Text(stringResource(R.string.add_edit_save_button))
     }
 }

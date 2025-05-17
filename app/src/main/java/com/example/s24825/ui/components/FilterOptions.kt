@@ -5,6 +5,7 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
@@ -12,7 +13,7 @@ import androidx.compose.ui.unit.dp
 import com.example.filmoteka.R
 import com.example.s24825.data.entity.FilmCategories
 
-@OptIn(ExperimentalMaterial3Api::class)
+
 @Composable
 fun FilterOptions(
     selectedCategory: String?,
@@ -21,69 +22,95 @@ fun FilterOptions(
     onWatchStatusSelected: (Boolean?) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val watchStatusOptions = listOf(
-        null to stringResource(R.string.filter_option_all_statuses),
-        true to stringResource(R.string.filter_option_watched),
-        false to stringResource(R.string.filter_option_unwatched)
-    )
-
-    // Dodajemy "Wszystkie" na początek listy kategorii
-    val categoryOptions = listOf(null to stringResource(R.string.filter_option_all_categories)) +
-            FilmCategories.categories.map { it to it } // Zakładamy, że nazwy kategorii są OK jako klucze i etykiety
-
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
-        // Category filters
-        Text(
-            text = stringResource(R.string.filter_label_category),
-            style = MaterialTheme.typography.titleSmall,
-            color = MaterialTheme.colorScheme.onSurface
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-        LazyRow( // Użycie LazyRow dla przewijania, jeśli kategorii jest wiele
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(vertical = 4.dp)
-        ) {
-            items(categoryOptions, key = { it.first ?: "all_cat" }) { (categoryValue, categoryLabel) ->
+        CategoryFilters(selectedCategory, onCategorySelected)
+        Spacer(modifier = Modifier.height(12.dp))
+        WatchStatusFilters(selectedWatchStatus, onWatchStatusSelected)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun CategoryFilters(
+    selectedCategory: String?,
+    onCategorySelected: (String?) -> Unit
+) {
+    val categoryOptions = remember {
+        listOf(null to R.string.filter_option_all_categories) + // Używamy ID zasobu
+                FilmCategories.categories.map { category ->
+                    category to when (category) { // Mapowanie na ID zasobów dla kategorii
+                        FilmCategories.FILM -> R.string.category_film
+                        FilmCategories.SERIAL -> R.string.category_serial
+                        FilmCategories.DOKUMENT -> R.string.category_documentary
+                        else -> 0 // Lub jakiś domyślny string, jeśli kategorie są dynamiczne
+                    }
+                }
+    }
+
+    Text(
+        text = stringResource(R.string.filter_label_category),
+        style = MaterialTheme.typography.titleSmall,
+        color = MaterialTheme.colorScheme.onSurface
+    )
+    Spacer(modifier = Modifier.height(4.dp))
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(vertical = 4.dp)
+    ) {
+        items(categoryOptions, key = { it.first ?: "all_cat_key" }) { (categoryValue, categoryLabelResId) ->
+            if (categoryLabelResId != 0) { // Sprawdzamy, czy mamy poprawny ID zasobu
                 FilterChip(
                     selected = selectedCategory == categoryValue,
                     onClick = { onCategorySelected(categoryValue) },
-                    label = { Text(categoryLabel) }, // Używamy przetłumaczonej etykiety
+                    label = { Text(stringResource(id = categoryLabelResId)) },
                     colors = FilterChipDefaults.filterChipColors(
                         selectedContainerColor = MaterialTheme.colorScheme.primary,
-                        selectedLabelColor = Color.White // Lub MaterialTheme.colorScheme.onPrimary
+                        selectedLabelColor = Color.White
                     )
                 )
             }
         }
+    }
+}
 
-        Spacer(modifier = Modifier.height(12.dp)) // Zwiększony odstęp
-
-        // Watch status filters
-        Text(
-            text = stringResource(R.string.filter_label_status),
-            style = MaterialTheme.typography.titleSmall,
-            color = MaterialTheme.colorScheme.onSurface
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun WatchStatusFilters(
+    selectedWatchStatus: Boolean?,
+    onWatchStatusSelected: (Boolean?) -> Unit
+) {
+    val watchStatusOptions = remember {
+        listOf(
+            null to R.string.filter_option_all_statuses,
+            true to R.string.filter_option_watched,
+            false to R.string.filter_option_unwatched
         )
-        Spacer(modifier = Modifier.height(4.dp))
-        LazyRow( // Użycie LazyRow dla przewijania
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(vertical = 4.dp)
-        ) {
-            items(watchStatusOptions, key = { it.first?.toString() ?: "all_stat" }) { (statusValue, statusLabel) ->
-                FilterChip(
-                    selected = selectedWatchStatus == statusValue,
-                    onClick = { onWatchStatusSelected(statusValue) },
-                    label = { Text(statusLabel) },
-                    colors = FilterChipDefaults.filterChipColors(
-                        selectedContainerColor = MaterialTheme.colorScheme.primary,
-                        selectedLabelColor = Color.White // Lub MaterialTheme.colorScheme.onPrimary
-                    )
+    }
+
+    Text(
+        text = stringResource(R.string.filter_label_status),
+        style = MaterialTheme.typography.titleSmall,
+        color = MaterialTheme.colorScheme.onSurface
+    )
+    Spacer(modifier = Modifier.height(4.dp))
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(vertical = 4.dp)
+    ) {
+        items(watchStatusOptions, key = { it.first?.toString() ?: "all_stat_key" }) { (statusValue, statusLabelResId) ->
+            FilterChip(
+                selected = selectedWatchStatus == statusValue,
+                onClick = { onWatchStatusSelected(statusValue) },
+                label = { Text(stringResource(id = statusLabelResId)) },
+                colors = FilterChipDefaults.filterChipColors(
+                    selectedContainerColor = MaterialTheme.colorScheme.primary,
+                    selectedLabelColor = Color.White
                 )
-            }
+            )
         }
     }
 }
