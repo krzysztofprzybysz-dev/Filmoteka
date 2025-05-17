@@ -1,32 +1,76 @@
 <resources>
     <string name="app_name">Filmoteka</string>
-    <string name="film_list">Lista filmów</string>
-    <string name="film_details">Szczegóły filmu</string>
-    <string name="add_film">Dodaj film</string>
-    <string name="edit_film">Edytuj film</string>
+
     <string name="save">Zapisz</string>
     <string name="back">Powrót</string>
     <string name="delete">Usuń</string>
     <string name="cancel">Anuluj</string>
-    <string name="confirm_delete">Potwierdź usunięcie</string>
-    <string name="delete_confirm_message">Czy na pewno chcesz usunąć ten film z kolekcji?</string>
-    <string name="title">Tytuł</string>
-    <string name="release_date">Data premiery</string>
-    <string name="category">Kategoria</string>
-    <string name="status">Status</string>
-    <string name="watched">Obejrzany</string>
-    <string name="unwatched">Nieobejrzany</string>
-    <string name="rating">Ocena (1-10)</string>
-    <string name="comment">Komentarz</string>
-    <string name="poster">Plakat</string>
-    <string name="select_poster">Wybierz plakat</string>
-    <string name="no_poster">Brak plakatu</string>
     <string name="all">Wszystkie</string>
+    <string name="error_generic">Wystąpił błąd</string>
+    <string name="loading">Ładowanie…</string>
+
+    <string name="film_list_title">Filmoteka</string>
+    <string name="fab_add_film_description">Dodaj nowy film</string>
     <string name="item_count">Liczba pozycji: %1$d</string>
-    <string name="no_films_matching">Brak filmów spełniających wybrane kryteria</string>
-    <string name="read_only_message">Ten film jest oznaczony jako obejrzany i nie może być edytowany.</string>
-    <string name="title_required">Tytuł jest wymagany</string>
-    <string name="category_required">Kategoria musi być wybrana</string>
-    <string name="rating_required">Ocena jest wymagana dla obejrzanych filmów</string>
-    <string name="date_future_error">Data premiery nie może być późniejsza niż 2 lata od dziś</string>
+    <string name="no_films_matching">Brak filmów spełniających wybrane kryteria.</string>
+    <string name="delete_dialog_title">Potwierdź usunięcie</string>
+    <string name="delete_dialog_message">Czy na pewno chcesz usunąć ten film z kolekcji?</string>
+    <string name="delete_dialog_confirm_button">Usuń</string>
+    <string name="delete_dialog_dismiss_button">Anuluj</string>
+
+    <string name="film_item_poster_description">Plakat filmu</string>
+    <string name="film_item_no_poster_description">Ikona braku plakatu</string>
+    <string name="film_item_label_premiere_date">Premiera: %1$s</string>
+    <string name="film_item_label_category">Kategoria: %1$s</string>
+    <string name="film_item_label_rating">Ocena: %1$s</string>
+    <string name="film_item_rating_none">Brak</string>
+    <string name="film_item_status_unwatched">Nieobejrzane</string>
+    <string name="film_item_rating_icon_description">Ikona oceny (gwiazdka)</string>
+
+    <string name="add_film_screen_title">Dodaj nowy film</string>
+    <string name="edit_film_screen_title">Edytuj film</string>
+    <string name="add_edit_label_title">Tytuł</string>
+    <string name="add_edit_label_release_date">Data premiery</string>
+    <string name="add_edit_label_category">Kategoria</string>
+    <string name="add_edit_label_status">Status</string>
+    <string name="add_edit_status_watched">Obejrzany</string>
+    <string name="add_edit_status_unwatched">Nieobejrzany</string>
+    <string name="add_edit_label_rating">Ocena (1–10)</string>
+    <string name="add_edit_hint_rating">Wprowadź ocenę od 1 do 10</string>
+    <string name="add_edit_label_comment">Komentarz</string>
+    <string name="add_edit_label_poster">Plakat</string>
+    <string name="add_edit_select_poster_from_gallery">Wybierz plakat z galerii</string>
+    <string name="add_edit_save_button">Zapisz</string>
+    <string name="content_desc_arrow_back">Wróć</string>
+    <string name="content_desc_date_range_icon">Wybierz datę</string>
+    <string name="content_desc_arrow_drop_down">Rozwiń listę</string>
+    <string name="content_desc_play_arrow_icon">Ikona zastępcza plakatu</string>
+
+    <string name="film_details_screen_title">Szczegóły filmu</string>
+    <string name="film_details_error_not_found">Nie znaleziono filmu.</string>
+    <string name="film_details_no_poster">Brak plakatu</string>
+    <string name="film_details_label_release_date">Data premiery: %1$s</string>
+    <string name="film_details_label_category">Kategoria: %1$s</string>
+    <string name="film_details_label_status_watched">Status: Obejrzany</string>
+    <string name="film_details_label_status_unwatched">Status: Nieobejrzany</string>
+    <string name="film_details_label_rating">Ocena: %1$s</string>
+    <string name="film_details_label_comment_section">Komentarz:</string>
+    <string name="film_details_read_only_message">Ten film jest oznaczony jako obejrzany i nie może być edytowany.</string>
+    <string name="content_desc_star_icon">Ikona gwiazdki</string>
+
+    <string name="filter_label_category">Kategoria:</string>
+    <string name="filter_label_status">Status:</string>
+    <string name="filter_option_all_categories">Wszystkie</string>
+    <string name="filter_option_all_statuses">Wszystkie</string>
+    <string name="filter_option_watched">Obejrzane</string>
+    <string name="filter_option_unwatched">Nieobejrzane</string>
+
+    <string name="validation_error_title_empty">Tytuł nie może być pusty.</string>
+    <string name="validation_error_date_too_far">Data premiery nie może być późniejsza niż 2 lata od dziś.</string>
+    <string name="validation_error_category_not_selected">Kategoria musi być wybrana.</string>
+    <string name="validation_error_rating_required_for_watched">Ocena jest wymagana dla obejrzanych filmów.</string>
+
+    <string name="category_film">Film</string>
+    <string name="category_serial">Serial</string>
+    <string name="category_documentary">Dokument</string>
 </resources>

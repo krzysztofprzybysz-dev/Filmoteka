@@ -1,5 +1,6 @@
 package com.example.s24825.ui.details
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -12,25 +13,21 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.filmoteka.R
 import com.example.s24825.FilmotekaApplication
 import java.text.SimpleDateFormat
 import java.util.Locale
 
-/**
- * Screen for displaying detailed information about a film.
- *
- * This screen is primarily used for viewed films which cannot be edited.
- * It shows all details about the film including poster, title, release date,
- * category, status, rating, and comments.
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun FilmDetailsScreen(
@@ -38,14 +35,12 @@ fun FilmDetailsScreen(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Get ViewModel
     val context = LocalContext.current
     val app = context.applicationContext as FilmotekaApplication
     val viewModel: FilmDetailViewModel = viewModel(
         factory = FilmDetailViewModel.Factory(app.repository, filmId)
     )
 
-    // Collect state
     val film by viewModel.film.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
 
@@ -54,12 +49,12 @@ fun FilmDetailsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Szczegóły filmu") },
+                title = { Text(stringResource(R.string.film_details_screen_title)) },
                 navigationIcon = {
                     IconButton(onClick = onBackClick) {
                         Icon(
                             imageVector = Icons.Default.ArrowBack,
-                            contentDescription = "Powrót"
+                            contentDescription = stringResource(R.string.content_desc_arrow_back)
                         )
                     }
                 },
@@ -77,14 +72,10 @@ fun FilmDetailsScreen(
                 .padding(innerPadding)
         ) {
             if (isLoading) {
-                // Loading indicator
-                CircularProgressIndicator(
-                    modifier = Modifier.align(Alignment.Center)
-                )
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
             } else if (film == null) {
-                // Error state - film not found
                 Text(
-                    text = "Nie znaleziono filmu",
+                    text = stringResource(R.string.film_details_error_not_found),
                     style = MaterialTheme.typography.bodyLarge,
                     textAlign = TextAlign.Center,
                     modifier = Modifier
@@ -92,7 +83,7 @@ fun FilmDetailsScreen(
                         .padding(16.dp)
                 )
             } else {
-                // Film details content
+                val currentFilm = film!! // Wiemy, że nie jest null tutaj
                 Column(
                     modifier = Modifier
                         .fillMaxSize()
@@ -100,29 +91,29 @@ fun FilmDetailsScreen(
                         .padding(16.dp)
                 ) {
                     // Poster image
-                    if (film?.posterPath != null) {
+                    if (currentFilm.posterPath != null) {
                         AsyncImage(
                             model = ImageRequest.Builder(LocalContext.current)
-                                .data(film?.posterPath)
+                                .data(currentFilm.posterPath)
                                 .crossfade(true)
                                 .build(),
-                            contentDescription = "Film Poster",
-                            contentScale = ContentScale.FillWidth,
+                            contentDescription = stringResource(R.string.film_item_poster_description),
+                            contentScale = ContentScale.FillWidth, // Lub Fit, zależnie od preferencji
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(240.dp)
+                                .heightIn(min = 200.dp, max = 300.dp) // Ograniczenie wysokości plakatu
+                                .clip(MaterialTheme.shapes.medium)
                         )
                     } else {
-                        // Placeholder when no poster is available
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .height(240.dp)
-                                .align(Alignment.CenterHorizontally),
+                                .height(240.dp) // Utrzymanie spójnej wysokości
+                                .background(MaterialTheme.colorScheme.surfaceVariant, MaterialTheme.shapes.medium),
                             contentAlignment = Alignment.Center
                         ) {
                             Text(
-                                text = "Brak plakatu",
+                                text = stringResource(R.string.film_details_no_poster),
                                 style = MaterialTheme.typography.bodyLarge,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant
                             )
@@ -133,7 +124,7 @@ fun FilmDetailsScreen(
 
                     // Title
                     Text(
-                        text = film?.title ?: "",
+                        text = currentFilm.title,
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold
                     )
@@ -141,42 +132,42 @@ fun FilmDetailsScreen(
                     Spacer(modifier = Modifier.height(8.dp))
 
                     // Release date
-                    film?.releaseDate?.let { date ->
-                        Text(
-                            text = "Data premiery: ${dateFormat.format(date)}",
-                            style = MaterialTheme.typography.bodyLarge
-                        )
-                    }
+                    Text(
+                        text = stringResource(
+                            R.string.film_details_label_release_date,
+                            dateFormat.format(currentFilm.releaseDate)
+                        ),
+                        style = MaterialTheme.typography.bodyLarge
+                    )
 
                     Spacer(modifier = Modifier.height(8.dp))
 
                     // Category
                     Text(
-                        text = "Kategoria: ${film?.category}",
+                        text = stringResource(R.string.film_details_label_category, currentFilm.category),
                         style = MaterialTheme.typography.bodyLarge
                     )
 
                     Spacer(modifier = Modifier.height(8.dp))
 
                     // Status and rating
-                    Row(
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
                         Text(
-                            text = "Status: ${if (film?.isWatched == true) "Obejrzany" else "Nieobejrzany"}",
+                            text = if (currentFilm.isWatched) stringResource(R.string.film_details_label_status_watched)
+                            else stringResource(R.string.film_details_label_status_unwatched),
                             style = MaterialTheme.typography.bodyLarge
                         )
 
-                        if (film?.isWatched == true && film?.rating != null) {
+                        if (currentFilm.isWatched && currentFilm.rating != null) {
                             Spacer(modifier = Modifier.width(16.dp))
                             Icon(
                                 imageVector = Icons.Default.Star,
-                                contentDescription = "Rating",
+                                contentDescription = stringResource(R.string.content_desc_star_icon),
                                 tint = MaterialTheme.colorScheme.tertiary
                             )
                             Spacer(modifier = Modifier.width(4.dp))
                             Text(
-                                text = "Ocena: ${film?.rating}",
+                                text = stringResource(R.string.film_details_label_rating, currentFilm.rating.toString()),
                                 style = MaterialTheme.typography.bodyLarge,
                                 fontWeight = FontWeight.Bold
                             )
@@ -184,7 +175,7 @@ fun FilmDetailsScreen(
                     }
 
                     // Comment section
-                    if (!film?.comment.isNullOrBlank()) {
+                    if (!currentFilm.comment.isNullOrBlank()) {
                         Spacer(modifier = Modifier.height(16.dp))
                         Surface(
                             modifier = Modifier.fillMaxWidth(),
@@ -193,34 +184,35 @@ fun FilmDetailsScreen(
                         ) {
                             Column(modifier = Modifier.padding(16.dp)) {
                                 Text(
-                                    text = "Komentarz:",
+                                    text = stringResource(R.string.film_details_label_comment_section),
                                     style = MaterialTheme.typography.titleMedium,
                                     fontWeight = FontWeight.Bold
                                 )
-
                                 Spacer(modifier = Modifier.height(8.dp))
-
                                 Text(
-                                    text = film?.comment ?: "",
+                                    text = currentFilm.comment!!,
                                     style = MaterialTheme.typography.bodyLarge
                                 )
                             }
                         }
                     }
 
-                    // Read-only information
-                    Spacer(modifier = Modifier.height(24.dp))
-                    Surface(
-                        modifier = Modifier.fillMaxWidth(),
-                        color = MaterialTheme.colorScheme.errorContainer,
-                        shape = MaterialTheme.shapes.small
-                    ) {
-                        Text(
-                            text = "Ten film jest oznaczony jako obejrzany i nie może być edytowany.",
-                            style = MaterialTheme.typography.bodyMedium,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.padding(8.dp)
-                        )
+                    // Read-only information (jeśli film jest obejrzany)
+                    if (currentFilm.isWatched) {
+                        Spacer(modifier = Modifier.height(24.dp))
+                        Surface(
+                            modifier = Modifier.fillMaxWidth(),
+                            color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.5f), // Lżejszy kolor
+                            shape = MaterialTheme.shapes.medium // Zaokrąglenie
+                        ) {
+                            Text(
+                                text = stringResource(R.string.film_details_read_only_message),
+                                style = MaterialTheme.typography.bodyMedium,
+                                textAlign = TextAlign.Center,
+                                modifier = Modifier.padding(12.dp), // Zwiększony padding
+                                color = MaterialTheme.colorScheme.onErrorContainer
+                            )
+                        }
                     }
                 }
             }

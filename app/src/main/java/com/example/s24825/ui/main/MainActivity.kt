@@ -8,7 +8,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -25,8 +24,12 @@ import com.example.s24825.ui.theme.FilmotekaTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        //root contentu
         setContent {
             FilmotekaTheme {
+
+                //rysuje tło
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
@@ -57,11 +60,13 @@ object FilmotekaDestinations {
 fun FilmotekaApp(navController: NavHostController = rememberNavController()) {
 
 
+    //tworzymy kontroler nawigacji ze stanardowa wartoscia ktora zapamietuje stan nawigacji przy rekompozycji
     NavHost(
         navController = navController,
         startDestination = FilmotekaDestinations.FILM_LIST_ROUTE
     ) {
-        // Film List Screen
+        // rejestrujemy ekrany pod danymi routami:
+
         composable(FilmotekaDestinations.FILM_LIST_ROUTE) {
             FilmListScreen(
                 onFilmClick = { filmId, isWatched ->
@@ -81,6 +86,7 @@ fun FilmotekaApp(navController: NavHostController = rememberNavController()) {
             arguments = listOf(navArgument(FilmotekaDestinations.FILM_ID_ARG) { type = NavType.LongType }))
 
 
+        //dodajemy nowy ekran do backstacku i przekazujemy mu parametry za pomoca argumentow w sciezce
         { backStackEntry ->
             val filmId = backStackEntry.arguments?.getLong(FilmotekaDestinations.FILM_ID_ARG) ?: 0L
 

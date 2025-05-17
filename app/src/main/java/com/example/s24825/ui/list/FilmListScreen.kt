@@ -11,23 +11,21 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.filmoteka.R
 import com.example.s24825.FilmotekaApplication
 import com.example.s24825.ui.components.FilterOptions
 import com.example.s24825.ui.components.FilmItem
 
-
-
 @OptIn(ExperimentalMaterial3Api::class)
-
 @Composable
 fun FilmListScreen(
-
     onFilmClick: (Long, Boolean) -> Unit,
     onAddClick: () -> Unit,
     modifier: Modifier = Modifier
-
 ) {
     // Get ViewModel
     val context = LocalContext.current
@@ -42,12 +40,13 @@ fun FilmListScreen(
     val selectedWatchStatus by viewModel.selectedWatchStatus.collectAsState()
     val showDeleteDialog by viewModel.showDeleteDialog.collectAsState()
     val itemCount by viewModel.itemCount.collectAsState()
-
+    // Można dodać stan isLoading, jeśli operacje filtrowania/ładowania są długie
+    // val isLoading by viewModel.isLoading.collectAsState()
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Filmoteka") },
+                title = { Text(stringResource(id = R.string.film_list_title)) },
                 colors = TopAppBarDefaults.topAppBarColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     titleContentColor = MaterialTheme.colorScheme.onPrimary
@@ -61,15 +60,12 @@ fun FilmListScreen(
             ) {
                 Icon(
                     imageVector = Icons.Default.Add,
-                    contentDescription = "Dodaj film",
+                    contentDescription = stringResource(id = R.string.fab_add_film_description),
                     tint = MaterialTheme.colorScheme.onPrimary
                 )
             }
         }
-    )
-
-
-    { innerPadding ->
+    ) { innerPadding ->
         Column(
             modifier = modifier
                 .fillMaxSize()
@@ -84,19 +80,21 @@ fun FilmListScreen(
             )
 
             // Item count
-            Box(
+            Text(
+                text = stringResource(id = R.string.item_count, itemCount),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 8.dp)
-            ) {
-                Text(
-                    text = "Liczba pozycji: $itemCount",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
-            }
+            )
 
-            // Film list
+            // Film list or empty state
+            // if (isLoading) {
+            //     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            //         CircularProgressIndicator()
+            //     }
+            // } else
             if (films.isEmpty()) {
                 Box(
                     modifier = Modifier
@@ -105,21 +103,22 @@ fun FilmListScreen(
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
-                        text = "Brak filmów spełniających wybrane kryteria",
+                        text = stringResource(id = R.string.no_films_matching),
                         style = MaterialTheme.typography.bodyLarge,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center
                     )
                 }
             } else {
                 LazyColumn(
                     modifier = Modifier.fillMaxSize(),
-                    contentPadding = PaddingValues(bottom = 80.dp) // Extra padding for FAB
+                    contentPadding = PaddingValues(start = 8.dp, end = 8.dp, bottom = 80.dp) // Padding dla FAB i estetyki
                 ) {
-                    items(films) { film ->
+                    items(films, key = { film -> film.id }) { film ->
                         FilmItem(
                             film = film,
                             onClick = { onFilmClick(film.id, film.isWatched) },
-                            onLongClick = { viewModel.showDeleteDialog(film) }
+                            onLongClick = { viewModel.showDeleteDialog(film) } // Przekazanie funkcji do obsługi długiego kliknięcia
                         )
                     }
                 }
@@ -131,16 +130,16 @@ fun FilmListScreen(
     if (showDeleteDialog) {
         AlertDialog(
             onDismissRequest = { viewModel.dismissDeleteDialog() },
-            title = { Text("Potwierdź usunięcie") },
-            text = { Text("Czy na pewno chcesz usunąć ten film z kolekcji?") },
+            title = { Text(stringResource(id = R.string.delete_dialog_title)) },
+            text = { Text(stringResource(id = R.string.delete_dialog_message)) },
             confirmButton = {
                 TextButton(onClick = { viewModel.deleteFilm() }) {
-                    Text("Usuń")
+                    Text(stringResource(id = R.string.delete_dialog_confirm_button))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { viewModel.dismissDeleteDialog() }) {
-                    Text("Anuluj")
+                    Text(stringResource(id = R.string.delete_dialog_dismiss_button))
                 }
             }
         )
