@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">Filmoteka</string>
+    <string name="film_list">Lista filmów</string>
+    <string name="film_details">Szczegóły filmu</string>
+    <string name="add_film">Dodaj film</string>
+    <string name="edit_film">Edytuj film</string>
+    <string name="save">Zapisz</string>
+    <string name="back">Powrót</string>
+    <string name="delete">Usuń</string>
+    <string name="cancel">Anuluj</string>
+    <string name="confirm_delete">Potwierdź usunięcie</string>
+    <string name="delete_confirm_message">Czy na pewno chcesz usunąć ten film z kolekcji?</string>
+    <string name="title">Tytuł</string>
+    <string name="release_date">Data premiery</string>
+    <string name="category">Kategoria</string>
+    <string name="status">Status</string>
+    <string name="watched">Obejrzany</string>
+    <string name="unwatched">Nieobejrzany</string>
+    <string name="rating">Ocena (1-10)</string>
+    <string name="comment">Komentarz</string>
+    <string name="poster">Plakat</string>
+    <string name="select_poster">Wybierz plakat</string>
+    <string name="no_poster">Brak plakatu</string>
+    <string name="all">Wszystkie</string>
+    <string name="item_count">Liczba pozycji: %1$d</string>
+    <string name="no_films_matching">Brak filmów spełniających wybrane kryteria</string>
+    <string name="read_only_message">Ten film jest oznaczony jako obejrzany i nie może być edytowany.</string>
+    <string name="title_required">Tytuł jest wymagany</string>
+    <string name="category_required">Kategoria musi być wybrana</string>
+    <string name="rating_required">Ocena jest wymagana dla obejrzanych filmów</string>
+    <string name="date_future_error">Data premiery nie może być późniejsza niż 2 lata od dziś</string>
+</resources>
