@@ -272,7 +272,3 @@ This project is part of academic coursework and is subject to university guideli
 Student ID: s24825  
 Course: Mobile Application Programming (PRM)  
 Polish-Japanese Academy of Information Technology (PJATK)
-
----
-
-<p align="center">Made with ❤️ for Android</p>
