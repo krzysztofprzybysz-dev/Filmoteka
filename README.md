@@ -27,19 +27,23 @@ Filmoteka is a comprehensive movie collection management app that helps users or
 <div align="center">
 
 ### Film List Screen
-![Film List](screenshots/film_list.png)
+<img src="screenshots/film_list.png" width="270" alt="Film List">
+
 *Browse your collection with filtering options*
 
 ### Add/Edit Film Screen
-![Add Film](screenshots/add_film.png)
+<img src="screenshots/add_film.png" width="270" alt="Add Film">
+
 *Add new films with detailed information*
 
 ### Film Details Screen
-![Film Details](screenshots/film_details.png)
+<img src="screenshots/film_details.png" width="270" alt="Film Details">
+
 *View complete film information*
 
 ### Delete Confirmation
-![Delete Dialog](screenshots/delete_dialog.png)
+<img src="screenshots/delete_dialog.png" width="270" alt="Delete Dialog">
+
 *Safe deletion with confirmation*
 
 </div>
