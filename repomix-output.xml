@@ -1,0 +1,3300 @@
+This file is a merged representation of the entire codebase, combined into a single document by Repomix.
+
+<file_summary>
+This section contains a summary of this file.
+
+<purpose>
+This file contains a packed representation of the entire repository's contents.
+It is designed to be easily consumable by AI systems for analysis, code review,
+or other automated processes.
+</purpose>
+
+<file_format>
+The content is organized as follows:
+1. This summary section
+2. Repository information
+3. Directory structure
+4. Repository files (if enabled)
+5. Multiple file entries, each consisting of:
+  - File path as an attribute
+  - Full contents of the file
+</file_format>
+
+<usage_guidelines>
+- This file should be treated as read-only. Any changes should be made to the
+  original repository files, not this packed version.
+- When processing this file, use the file path to distinguish
+  between different files in the repository.
+- Be aware that this file may contain sensitive information. Handle it with
+  the same level of security as you would the original repository.
+</usage_guidelines>
+
+<notes>
+- Some files may have been excluded based on .gitignore rules and Repomix's configuration
+- Binary files are not included in this packed representation. Please refer to the Repository Structure section for a complete list of file paths, including binary files
+- Files matching patterns in .gitignore are excluded
+- Files matching default ignore patterns are excluded
+- Files are sorted by Git change count (files with more changes are at the bottom)
+</notes>
+
+</file_summary>
+
+<directory_structure>
+.gitignore
+app/.gitignore
+app/build.gradle.kts
+app/proguard-rules.pro
+app/src/androidTest/java/com/example/s24825/ExampleInstrumentedTest.kt
+app/src/main/AndroidManifest.xml
+app/src/main/java/com/example/s24825/data/dao/FilmDao.kt
+app/src/main/java/com/example/s24825/data/database/FilmDatabase.kt
+app/src/main/java/com/example/s24825/data/entity/Film.kt
+app/src/main/java/com/example/s24825/data/repository/FilmRepository.kt
+app/src/main/java/com/example/s24825/FilmotekaApplication.kt
+app/src/main/java/com/example/s24825/ui/addedit/AddEditFilmScreen.kt
+app/src/main/java/com/example/s24825/ui/addedit/FilmEditViewModel.kt
+app/src/main/java/com/example/s24825/ui/components/FilmItem.kt
+app/src/main/java/com/example/s24825/ui/components/FilterOptions.kt
+app/src/main/java/com/example/s24825/ui/details/FilmDetailsScreen.kt
+app/src/main/java/com/example/s24825/ui/details/FilmDetailViewModel.kt
+app/src/main/java/com/example/s24825/ui/list/FilmListScreen.kt
+app/src/main/java/com/example/s24825/ui/list/FilmListViewModel.kt
+app/src/main/java/com/example/s24825/ui/main/MainActivity.kt
+app/src/main/java/com/example/s24825/ui/theme/Color.kt
+app/src/main/java/com/example/s24825/ui/theme/Theme.kt
+app/src/main/java/com/example/s24825/ui/theme/Type.kt
+app/src/main/java/com/example/s24825/util/Converters.kt
+app/src/main/java/com/example/s24825/util/ImageUtils.kt
+app/src/main/res/drawable/ic_launcher_background.xml
+app/src/main/res/drawable/ic_launcher_foreground.xml
+app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml
+app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml
+app/src/main/res/values/colors.xml
+app/src/main/res/values/strings.xml
+app/src/main/res/values/themes.xml
+app/src/main/res/xml/backup_rules.xml
+app/src/main/res/xml/data_extraction_rules.xml
+app/src/test/java/com/example/s24825/ExampleUnitTest.kt
+build.gradle.kts
+gradle.properties
+gradle/libs.versions.toml
+gradle/wrapper/gradle-wrapper.properties
+gradlew
+gradlew.bat
+settings.gradle.kts
+</directory_structure>
+
+<files>
+This section contains the contents of the repository's files.
+
+<file path=".gitignore">
+*.iml
+.gradle
+/local.properties
+/.idea/caches
+/.idea/libraries
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+.DS_Store
+/build
+/captures
+.externalNativeBuild
+.cxx
+local.properties
+</file>
+
+<file path="app/.gitignore">
+/build
+</file>
+
+<file path="app/build.gradle.kts">
+plugins {
+    id("com.android.application")
+    id("org.jetbrains.kotlin.android")
+    // Replace KAPT with KSP
+    // id("org.jetbrains.kotlin.kapt")
+    id("com.google.devtools.ksp")
+}
+
+android {
+    namespace = "com.example.filmoteka"
+    compileSdk = 34 // Use 34 to ensure compatibility
+
+
+
+    defaultConfig {
+        applicationId = "com.example.filmoteka"
+        minSdk = 24
+        targetSdk = 34
+        versionCode = 1
+        versionName = "1.0"
+
+        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+            proguardFiles(
+                getDefaultProguardFile("proguard-android-optimize.txt"),
+                "proguard-rules.pro"
+            )
+        }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = "11"
+    }
+    buildFeatures {
+        compose = true
+    }
+
+    applicationVariants.all {
+        kotlin.sourceSets {
+            getByName(name) {
+                kotlin.srcDir("build/generated/ksp/$name/kotlin")
+            }
+        }
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.8" // Compatible with Kotlin 1.9.22
+    }
+}
+
+dependencies {
+    // Core Android dependencies
+    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
+    implementation("androidx.activity:activity-compose:1.8.2")
+
+    // Compose dependencies
+    val composeBomVersion = "2023.10.01"
+    implementation(platform("androidx.compose:compose-bom:$composeBomVersion"))
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.ui:ui-graphics")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.compose.material3:material3")
+
+    val roomVersion = "2.6.1"
+    implementation("androidx.room:room-runtime:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
+    // kapt("androidx.room:room-compiler:$roomVersion") // Remove this line
+    ksp("androidx.room:room-compiler:$roomVersion") // Add this line
+
+    // Navigation
+    implementation("androidx.navigation:navigation-compose:2.7.7")
+
+    // Coil for image loading
+    implementation("io.coil-kt:coil-compose:2.5.0")
+
+    // Testing
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation(platform("androidx.compose:compose-bom:$composeBomVersion"))
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    debugImplementation("androidx.compose.ui:ui-tooling")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
+}
+</file>
+
+<file path="app/proguard-rules.pro">
+# Add project specific ProGuard rules here.
+# You can control the set of applied configuration files using the
+# proguardFiles setting in build.gradle.
+#
+# For more details, see
+#   http://developer.android.com/guide/developing/tools/proguard.html
+
+# If your project uses WebView with JS, uncomment the following
+# and specify the fully qualified class name to the JavaScript interface
+# class:
+#-keepclassmembers class fqcn.of.javascript.interface.for.webview {
+#   public *;
+#}
+
+# Uncomment this to preserve the line number information for
+# debugging stack traces.
+#-keepattributes SourceFile,LineNumberTable
+
+# If you keep the line number information, uncomment this to
+# hide the original source file name.
+#-renamesourcefileattribute SourceFile
+</file>
+
+<file path="app/src/androidTest/java/com/example/s24825/ExampleInstrumentedTest.kt">
+package com.example.s24825
+
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.ext.junit.runners.AndroidJUnit4
+
+import org.junit.Test
+import org.junit.runner.RunWith
+
+import org.junit.Assert.*
+
+/**
+ * Instrumented test, which will execute on an Android device.
+ *
+ * See [testing documentation](http://d.android.com/tools/testing).
+ */
+@RunWith(AndroidJUnit4::class)
+class ExampleInstrumentedTest {
+    @Test
+    fun useAppContext() {
+        // Context of the app under test.
+        val appContext = InstrumentationRegistry.getInstrumentation().targetContext
+        assertEquals("com.example.s24825", appContext.packageName)
+    }
+}
+</file>
+
+<file path="app/src/main/AndroidManifest.xml">
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <!-- Permissions for accessing images from gallery -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+
+    <application
+        android:name="com.example.s24825.FilmotekaApplication"
+        android:allowBackup="true"
+        android:dataExtractionRules="@xml/data_extraction_rules"
+        android:fullBackupContent="@xml/backup_rules"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/Theme.S24825"
+        tools:targetApi="31">
+        <activity
+            android:name="com.example.s24825.ui.main.MainActivity"
+            android:exported="true"
+            android:label="@string/app_name"
+            android:theme="@style/Theme.S24825">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>
+</file>
+
+<file path="app/src/main/java/com/example/s24825/data/dao/FilmDao.kt">
+package com.example.s24825.data.dao
+
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Update
+import com.example.s24825.data.entity.Film
+import kotlinx.coroutines.flow.Flow
+
+
+@Dao
+interface FilmDao {
+
+    /// TODO: Co znaczy FLOW, KORUTYNA i SUSPEND 
+    
+    @Query("SELECT * FROM films ORDER BY releaseDate ASC")
+    fun getAllFilms(): Flow<List<Film>>
+
+    @Query("SELECT * FROM films WHERE category = :category ORDER BY releaseDate ASC")
+    fun getFilmsByCategory(category: String): Flow<List<Film>>
+
+    @Query("SELECT * FROM films WHERE isWatched = :isWatched ORDER BY releaseDate ASC")
+    fun getFilmsByWatchStatus(isWatched: Boolean): Flow<List<Film>>
+
+    @Query("SELECT * FROM films WHERE (:category IS NULL OR category = :category) AND (:isWatched IS NULL OR isWatched = :isWatched) ORDER BY releaseDate ASC")
+    fun getFilteredFilms(category: String?, isWatched: Boolean?): Flow<List<Film>>
+
+    @Query("SELECT COUNT(*) FROM films WHERE (:category IS NULL OR category = :category) AND (:isWatched IS NULL OR isWatched = :isWatched)")
+    fun getFilteredFilmsCount(category: String?, isWatched: Boolean?): Flow<Int>
+
+    @Query("SELECT * FROM films WHERE id = :id")
+    suspend fun getFilmById(id: Long): Film?
+
+    @Insert
+    suspend fun insert(film: Film): Long
+
+    @Update
+    suspend fun update(film: Film)
+
+
+    @Delete
+    suspend fun delete(film: Film)
+}
+</file>
+
+<file path="app/src/main/java/com/example/s24825/data/database/FilmDatabase.kt">
+package com.example.s24825.data.database
+
+import android.content.Context
+import androidx.room.Database
+import androidx.room.Room
+import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import androidx.sqlite.db.SupportSQLiteDatabase
+import com.example.filmoteka.util.Converters
+import com.example.s24825.data.dao.FilmDao
+import com.example.s24825.data.entity.Film
+import com.example.s24825.data.entity.FilmCategories
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.util.Calendar
+
+@Database(entities = [Film::class], version = 1, exportSchema = false)
+
+@TypeConverters(Converters::class)
+abstract class FilmDatabase : RoomDatabase() {
+
+    abstract fun filmDao(): FilmDao
+
+
+    companion object {
+
+        //zapewnia, ze wszystkie wątki widzą tę samą wartość i operacje sa atomowe
+        @Volatile
+        private var INSTANCE: FilmDatabase? = null
+
+        fun getDatabase(context: Context, scope: CoroutineScope): FilmDatabase {
+
+            //jezeli null przechodzi do bloku synchronized ktory zabezpiecza przed race condition
+            return INSTANCE ?: synchronized(this) {
+
+                val instance = Room.databaseBuilder(
+                    context.applicationContext,
+                    FilmDatabase::class.java,
+                    "film_database"
+                )
+                    //jezeli aktualny schemat bazy danych nie pasuje do tej z entity ROOM czysci baze danych i tworzy ja od nowa
+                    .fallbackToDestructiveMigration()
+
+                    //tworzy callback ktory wykonuje sie przy tworzeniu bazy danych
+                    .addCallback(FilmDatabaseCallback(scope))
+                    .build()
+
+                INSTANCE = instance
+                instance
+            }
+        }
+
+
+        private class FilmDatabaseCallback(private val scope: CoroutineScope) : Callback() {
+
+            override fun onCreate(db: SupportSQLiteDatabase) {
+                super.onCreate(db)
+
+                INSTANCE?.let { database ->
+                    //populuje baze danych przy tworzeniu bazy danych w asynchronicznie
+                    scope.launch(Dispatchers.IO) {
+                        populateDatabase(database.filmDao())
+                    }
+                }
+            }
+        }
+
+        private suspend fun populateDatabase(filmDao: FilmDao) {
+
+            val calendar = Calendar.getInstance()
+
+            calendar.set(2010, Calendar.JULY, 16)
+
+            filmDao.insert(
+                Film(
+                    title = "Incepcja",
+                    releaseDate = calendar.time,
+                    category = FilmCategories.FILM,
+                    isWatched = true,
+                    rating = 9,
+                    comment = "Świetny film o snach i rzeczywistości.",
+                    posterPath = null
+                )
+            )
+
+            calendar.set(2011, Calendar.APRIL, 17)
+            filmDao.insert(
+                Film(
+                    title = "Gra o Tron",
+                    releaseDate = calendar.time,
+                    category = FilmCategories.SERIAL,
+                    isWatched = true,
+                    rating = 8,
+                    comment = "Epicki serial fantasy oparty na książkach George'a R.R. Martina.",
+                    posterPath = null
+                )
+            )
+
+            calendar.set(2006, Calendar.MARCH, 5)
+            filmDao.insert(
+                Film(
+                    title = "Planeta Ziemia",
+                    releaseDate = calendar.time,
+                    category = FilmCategories.DOKUMENT,
+                    isWatched = false,
+                    rating = null,
+                    comment = null,
+                    posterPath = null
+                )
+            )
+
+            calendar.set(1994, Calendar.SEPTEMBER, 23)
+            filmDao.insert(
+                Film(
+                    title = "Skazani na Shawshank",
+                    releaseDate = calendar.time,
+                    category = FilmCategories.FILM,
+                    isWatched = true,
+                    rating = 10,
+                    comment = "Jeden z najlepszych filmów wszech czasów.",
+                    posterPath = null
+                )
+            )
+
+            calendar.set(2008, Calendar.JANUARY, 20)
+            filmDao.insert(
+                Film(
+                    title = "Breaking Bad",
+                    releaseDate = calendar.time,
+                    category = FilmCategories.SERIAL,
+                    isWatched = false,
+                    rating = null,
+                    comment = null,
+                    posterPath = null
+                )
+            )
+        }
+    }
+}
+</file>
+
+<file path="app/src/main/java/com/example/s24825/data/entity/Film.kt">
+package com.example.s24825.data.entity
+
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import java.util.Date
+
+
+@Entity(tableName = "films")
+
+//klasa danych, automatycznie generuje settery, gettery, equals, hashCode, toString
+data class Film(
+    @PrimaryKey(autoGenerate = true)
+    val id: Long = 0,
+
+    val title: String,
+
+    val releaseDate: Date,
+
+    val category: String,
+
+    val isWatched: Boolean = false,
+
+    val rating: Int? = null,
+
+    val comment: String? = null,
+
+    val posterPath: String? = null
+)
+
+
+// tworzy statyczną listę kategorii filmów
+
+object FilmCategories {
+    const val FILM = "Film"
+    const val SERIAL = "Serial"
+    const val DOKUMENT = "Dokument"
+
+    val categories = listOf(FILM, SERIAL, DOKUMENT)
+}
+</file>
+
+<file path="app/src/main/java/com/example/s24825/data/repository/FilmRepository.kt">
+package com.example.s24825.data.repository
+
+import com.example.s24825.data.dao.FilmDao
+import com.example.s24825.data.entity.Film
+import kotlinx.coroutines.flow.Flow
+
+
+class FilmRepository(private val filmDao: FilmDao) {
+
+    val allFilms: Flow<List<Film>> = filmDao.getAllFilms()
+
+
+    fun getFilteredFilms(category: String?, isWatched: Boolean?): Flow<List<Film>> {
+        return filmDao.getFilteredFilms(category, isWatched)
+    }
+
+
+    fun getFilteredFilmsCount(category: String?, isWatched: Boolean?): Flow<Int> {
+        return filmDao.getFilteredFilmsCount(category, isWatched)
+    }
+
+    suspend fun getFilmById(id: Long): Film? {
+        return filmDao.getFilmById(id)
+    }
+
+
+    suspend fun insertFilm(film: Film): Long {
+        return filmDao.insert(film)
+    }
+
+
+    suspend fun updateFilm(film: Film) {
+        filmDao.update(film)
+    }
+
+
+    suspend fun deleteFilm(film: Film) {
+        filmDao.delete(film)
+    }
+}
+</file>
+
+<file path="app/src/main/java/com/example/s24825/FilmotekaApplication.kt">
+package com.example.s24825
+
+import android.app.Application
+import com.example.s24825.data.database.FilmDatabase
+import com.example.s24825.data.repository.FilmRepository
+import com.example.s24825.util.ImageUtils
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
+
+
+class FilmotekaApplication : Application() {
+
+    //tworzymy globalny zakres dla korutyny
+    val applicationScope = CoroutineScope(SupervisorJob())
+
+    val database by lazy {
+        FilmDatabase.getDatabase(this, applicationScope)
+    }
+
+    val repository by lazy {
+        FilmRepository(database.filmDao())
+    }
+
+    val imageUtils by lazy {
+        ImageUtils(this)
+    }
+}
+</file>
+
+<file path="app/src/main/java/com/example/s24825/ui/details/FilmDetailViewModel.kt">
+package com.example.s24825.ui.details
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import com.example.s24825.data.entity.Film
+import com.example.s24825.data.repository.FilmRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+
+/**
+ * ViewModel for the film detail screen.
+ *
+ * This ViewModel handles loading and displaying a single film's details.
+ * It's used for the read-only view of a film (particularly watched films).
+ */
+class FilmDetailViewModel(
+    private val repository: FilmRepository,
+    private val filmId: Long
+) : ViewModel() {
+
+    private val _film = MutableStateFlow<Film?>(null)
+    val film: StateFlow<Film?> = _film
+
+    private val _isLoading = MutableStateFlow(true)
+    val isLoading: StateFlow<Boolean> = _isLoading
+
+    init {
+        loadFilm()
+    }
+
+    /**
+     * Loads the film details from the repository.
+     */
+    private fun loadFilm() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            _film.value = repository.getFilmById(filmId)
+            _isLoading.value = false
+        }
+    }
+
+    /**
+     * Factory for creating FilmDetailViewModel instances with dependencies.
+     */
+    class Factory(
+        private val repository: FilmRepository,
+        private val filmId: Long
+    ) : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(FilmDetailViewModel::class.java)) {
+                @Suppress("UNCHECKED_CAST")
+                return FilmDetailViewModel(repository, filmId) as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel class")
+        }
+    }
+}
+</file>
+
+<file path="app/src/main/java/com/example/s24825/ui/theme/Color.kt">
+// Color.kt
+package com.example.s24825.ui.theme
+
+import androidx.compose.ui.graphics.Color
+
+val Purple80 = Color(0xFFD0BCFF)
+val PurpleGrey80 = Color(0xFFCCC2DC)
+val Pink80 = Color(0xFFEFB8C8)
+
+val Purple40 = Color(0xFF6650a4)
+val PurpleGrey40 = Color(0xFF625b71)
+val Pink40 = Color(0xFF7D5260)
+
+// Custom colors for our app
+val FilmRed = Color(0xFFE50914)
+val FilmBlue = Color(0xFF0071EB)
+val FilmGreen = Color(0xFF46D369)
+val FilmGrey = Color(0xFF808080)
+val FilmBlack = Color(0xFF221F1F)
+</file>
+
+<file path="app/src/main/java/com/example/s24825/ui/theme/Theme.kt">
+// Theme.kt
+package com.example.s24825.ui.theme
+
+import android.app.Activity
+import android.os.Build
+import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.darkColorScheme
+import androidx.compose.material3.dynamicDarkColorScheme
+import androidx.compose.material3.dynamicLightColorScheme
+import androidx.compose.material3.lightColorScheme
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
+import androidx.core.view.WindowCompat
+
+private val DarkColorScheme = darkColorScheme(
+    primary = FilmRed,
+    secondary = FilmBlue,
+    tertiary = FilmGreen,
+    background = FilmBlack,
+    surface = FilmBlack
+)
+
+private val LightColorScheme = lightColorScheme(
+    primary = FilmRed,
+    secondary = FilmBlue,
+    tertiary = FilmGreen
+
+    /* Other default colors to override
+    background = Color(0xFFFFFBFE),
+    surface = Color(0xFFFFFBFE),
+    onPrimary = Color.White,
+    onSecondary = Color.White,
+    onTertiary = Color.White,
+    onBackground = Color(0xFF1C1B1F),
+    onSurface = Color(0xFF1C1B1F),
+    */
+)
+
+@Composable
+fun FilmotekaTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(),
+    // Dynamic color is available on Android 12+
+    dynamicColor: Boolean = true,
+    content: @Composable () -> Unit
+) {
+    val colorScheme = when {
+        dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
+            val context = LocalContext.current
+            if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
+        }
+        darkTheme -> DarkColorScheme
+        else -> LightColorScheme
+    }
+    val view = LocalView.current
+    if (!view.isInEditMode) {
+        SideEffect {
+            val window = (view.context as Activity).window
+            window.statusBarColor = colorScheme.primary.toArgb()
+            WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = !darkTheme
+        }
+    }
+
+    MaterialTheme(
+        colorScheme = colorScheme,
+        typography = Typography,
+        content = content
+    )
+}
+</file>
+
+<file path="app/src/main/java/com/example/s24825/ui/theme/Type.kt">
+// Type.kt
+package com.example.s24825.ui.theme
+
+import androidx.compose.material3.Typography
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
+
+// Set of Material typography styles to start with
+val Typography = Typography(
+    bodyLarge = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.Normal,
+        fontSize = 16.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    )
+    /* Other default text styles to override
+    titleLarge = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.Normal,
+        fontSize = 22.sp,
+        lineHeight = 28.sp,
+        letterSpacing = 0.sp
+    ),
+    labelSmall = TextStyle(
+        fontFamily = FontFamily.Default,
+        fontWeight = FontWeight.Medium,
+        fontSize = 11.sp,
+        lineHeight = 16.sp,
+        letterSpacing = 0.5.sp
+    )
+    */
+)
+</file>
+
+<file path="app/src/main/java/com/example/s24825/util/Converters.kt">
+package com.example.filmoteka.util
+
+import androidx.room.TypeConverter
+import java.util.Date
+
+
+class Converters {
+
+
+    // customowe konwertery zeby Room mogl operowac na niestanardowych typach danych
+    @TypeConverter
+    fun fromTimestamp(value: Long?): Date? {
+        return value?.let { timestamp -> Date(timestamp) }
+    }
+
+    @TypeConverter
+    fun dateToTimestamp(date: Date?): Long? {
+        return date?.time
+    }
+}
+</file>
+
+<file path="app/src/main/java/com/example/s24825/util/ImageUtils.kt">
+package com.example.s24825.util
+
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.net.Uri
+import android.util.Log
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.util.UUID
+
+/**
+ * Utility class for handling image operations.
+ *
+ * This class provides functionality for saving images from gallery to the app's
+ * internal storage, loading images, and managing image files.
+ */
+class ImageUtils(private val context: Context) {
+
+    /**
+     * Directory name for storing poster images.
+     */
+    private val POSTERS_DIR = "posters"
+
+    /**
+     * Gets the directory for storing poster images.
+     */
+    private fun getPosterDirectory(): File {
+        val dir = File(context.filesDir, POSTERS_DIR)
+        if (!dir.exists()) {
+            dir.mkdirs()
+        }
+        return dir
+    }
+
+    /**
+     * Generates a unique filename for a new poster image.
+     */
+    private fun generateImageFilename(): String {
+        return "poster_${UUID.randomUUID()}.jpg"
+    }
+
+    /**
+     * Saves an image from a Uri to the app's internal storage.
+     *
+     * @param uri Uri of the image to save (from gallery picker)
+     * @return Path to the saved image file, or null if saving failed
+     */
+    suspend fun saveImageFromUri(uri: Uri): String? = withContext(Dispatchers.IO) {
+        try {
+            // Open an input stream from the Uri
+            context.contentResolver.openInputStream(uri)?.use { inputStream ->
+                // Create a file in the app's internal storage
+                val file = File(getPosterDirectory(), generateImageFilename())
+
+                // Save the image to the file
+                FileOutputStream(file).use { outputStream ->
+                    inputStream.copyTo(outputStream)
+                }
+
+                // Return the absolute path to the saved file
+                return@withContext file.absolutePath
+            }
+        } catch (e: IOException) {
+            Log.e("ImageUtils", "Error saving image", e)
+        }
+        return@withContext null
+    }
+
+    /**
+     * Loads a bitmap from a file path.
+     *
+     * @param path Path to the image file
+     * @return The loaded Bitmap, or null if loading failed
+     */
+    suspend fun loadImageFromPath(path: String): Bitmap? = withContext(Dispatchers.IO) {
+        try {
+            return@withContext BitmapFactory.decodeFile(path)
+        } catch (e: Exception) {
+            Log.e("ImageUtils", "Error loading image", e)
+            return@withContext null
+        }
+    }
+
+    /**
+     * Deletes an image file.
+     *
+     * @param path Path to the image file to delete
+     * @return True if deletion was successful, false otherwise
+     */
+    suspend fun deleteImage(path: String): Boolean = withContext(Dispatchers.IO) {
+        try {
+            val file = File(path)
+            if (file.exists()) {
+                return@withContext file.delete()
+            }
+        } catch (e: Exception) {
+            Log.e("ImageUtils", "Error deleting image", e)
+        }
+        return@withContext false
+    }
+}
+</file>
+
+<file path="app/src/main/res/drawable/ic_launcher_background.xml">
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path
+        android:fillColor="#3DDC84"
+        android:pathData="M0,0h108v108h-108z" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M9,0L9,108"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M19,0L19,108"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M29,0L29,108"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M39,0L39,108"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M49,0L49,108"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M59,0L59,108"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M69,0L69,108"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M79,0L79,108"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M89,0L89,108"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M99,0L99,108"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M0,9L108,9"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M0,19L108,19"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M0,29L108,29"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M0,39L108,39"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M0,49L108,49"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M0,59L108,59"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M0,69L108,69"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M0,79L108,79"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M0,89L108,89"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M0,99L108,99"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M19,29L89,29"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M19,39L89,39"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M19,49L89,49"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M19,59L89,59"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M19,69L89,69"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M19,79L89,79"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M29,19L29,89"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M39,19L39,89"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M49,19L49,89"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M59,19L59,89"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M69,19L69,89"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+    <path
+        android:fillColor="#00000000"
+        android:pathData="M79,19L79,89"
+        android:strokeWidth="0.8"
+        android:strokeColor="#33FFFFFF" />
+</vector>
+</file>
+
+<file path="app/src/main/res/drawable/ic_launcher_foreground.xml">
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path android:pathData="M31,63.928c0,0 6.4,-11 12.1,-13.1c7.2,-2.6 26,-1.4 26,-1.4l38.1,38.1L107,108.928l-32,-1L31,63.928z">
+        <aapt:attr name="android:fillColor">
+            <gradient
+                android:endX="85.84757"
+                android:endY="92.4963"
+                android:startX="42.9492"
+                android:startY="49.59793"
+                android:type="linear">
+                <item
+                    android:color="#44000000"
+                    android:offset="0.0" />
+                <item
+                    android:color="#00000000"
+                    android:offset="1.0" />
+            </gradient>
+        </aapt:attr>
+    </path>
+    <path
+        android:fillColor="#FFFFFF"
+        android:fillType="nonZero"
+        android:pathData="M65.3,45.828l3.8,-6.6c0.2,-0.4 0.1,-0.9 -0.3,-1.1c-0.4,-0.2 -0.9,-0.1 -1.1,0.3l-3.9,6.7c-6.3,-2.8 -13.4,-2.8 -19.7,0l-3.9,-6.7c-0.2,-0.4 -0.7,-0.5 -1.1,-0.3C38.8,38.328 38.7,38.828 38.9,39.228l3.8,6.6C36.2,49.428 31.7,56.028 31,63.928h46C76.3,56.028 71.8,49.428 65.3,45.828zM43.4,57.328c-0.8,0 -1.5,-0.5 -1.8,-1.2c-0.3,-0.7 -0.1,-1.5 0.4,-2.1c0.5,-0.5 1.4,-0.7 2.1,-0.4c0.7,0.3 1.2,1 1.2,1.8C45.3,56.528 44.5,57.328 43.4,57.328L43.4,57.328zM64.6,57.328c-0.8,0 -1.5,-0.5 -1.8,-1.2s-0.1,-1.5 0.4,-2.1c0.5,-0.5 1.4,-0.7 2.1,-0.4c0.7,0.3 1.2,1 1.2,1.8C66.5,56.528 65.6,57.328 64.6,57.328L64.6,57.328z"
+        android:strokeWidth="1"
+        android:strokeColor="#00000000" />
+</vector>
+</file>
+
+<file path="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml">
+<?xml version="1.0" encoding="utf-8"?>
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@drawable/ic_launcher_background" />
+    <foreground android:drawable="@drawable/ic_launcher_foreground" />
+    <monochrome android:drawable="@drawable/ic_launcher_foreground" />
+</adaptive-icon>
+</file>
+
+<file path="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml">
+<?xml version="1.0" encoding="utf-8"?>
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@drawable/ic_launcher_background" />
+    <foreground android:drawable="@drawable/ic_launcher_foreground" />
+    <monochrome android:drawable="@drawable/ic_launcher_foreground" />
+</adaptive-icon>
+</file>
+
+<file path="app/src/main/res/values/colors.xml">
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+</resources>
+</file>
+
+<file path="app/src/main/res/values/themes.xml">
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Theme.S24825" parent="android:Theme.Material.Light.NoActionBar" />
+</resources>
+</file>
+
+<file path="app/src/main/res/xml/backup_rules.xml">
+<?xml version="1.0" encoding="utf-8"?><!--
+   Sample backup rules file; uncomment and customize as necessary.
+   See https://developer.android.com/guide/topics/data/autobackup
+   for details.
+   Note: This file is ignored for devices older than API 31
+   See https://developer.android.com/about/versions/12/backup-restore
+-->
+<full-backup-content>
+    <!--
+   <include domain="sharedpref" path="."/>
+   <exclude domain="sharedpref" path="device.xml"/>
+-->
+</full-backup-content>
+</file>
+
+<file path="app/src/main/res/xml/data_extraction_rules.xml">
+<?xml version="1.0" encoding="utf-8"?><!--
+   Sample data extraction rules file; uncomment and customize as necessary.
+   See https://developer.android.com/about/versions/12/backup-restore#xml-changes
+   for details.
+-->
+<data-extraction-rules>
+    <cloud-backup>
+        <!-- TODO: Use <include> and <exclude> to control what is backed up.
+        <include .../>
+        <exclude .../>
+        -->
+    </cloud-backup>
+    <!--
+    <device-transfer>
+        <include .../>
+        <exclude .../>
+    </device-transfer>
+    -->
+</data-extraction-rules>
+</file>
+
+<file path="app/src/test/java/com/example/s24825/ExampleUnitTest.kt">
+package com.example.s24825
+
+import org.junit.Test
+
+import org.junit.Assert.*
+
+/**
+ * Example local unit test, which will execute on the development machine (host).
+ *
+ * See [testing documentation](http://d.android.com/tools/testing).
+ */
+class ExampleUnitTest {
+    @Test
+    fun addition_isCorrect() {
+        assertEquals(4, 2 + 2)
+    }
+}
+</file>
+
+<file path="build.gradle.kts">
+// Top-level build.gradle.kts
+plugins {
+    alias(libs.plugins.android.application) apply false
+    alias(libs.plugins.kotlin.android) apply false
+    // Replace KAPT with KSP
+    // alias(libs.plugins.kotlin.kapt) apply false
+    id("com.google.devtools.ksp") version "1.9.22-1.0.17" apply false
+}
+</file>
+
+<file path="gradle.properties">
+# Project-wide Gradle settings.
+# IDE (e.g. Android Studio) users:
+# Gradle settings configured through the IDE *will override*
+# any settings specified in this file.
+# For more details on how to configure your build environment visit
+# http://www.gradle.org/docs/current/userguide/build_environment.html
+# Specifies the JVM arguments used for the daemon process.
+# The setting is particularly useful for tweaking memory settings.
+org.gradle.jvmargs=-Xmx2048m -Dfile.encoding=UTF-8
+# When configured, Gradle will run in incubating parallel mode.
+# This option should only be used with decoupled projects. For more details, visit
+# https://developer.android.com/r/tools/gradle-multi-project-decoupled-projects
+# org.gradle.parallel=true
+# AndroidX package structure to make it clearer which packages are bundled with the
+# Android operating system, and which are packaged with your app's APK
+# https://developer.android.com/topic/libraries/support-library/androidx-rn
+android.useAndroidX=true
+# Kotlin code style for this project: "official" or "obsolete":
+kotlin.code.style=official
+# Enables namespacing of each library's R class so that its R class includes only the
+# resources declared in the library itself and none from the library's dependencies,
+# thereby reducing the size of the R class for that library
+android.nonTransitiveRClass=true
+</file>
+
+<file path="gradle/libs.versions.toml">
+[versions]
+agp = "8.8.0"  # Use a stable version of AGP
+kotlin = "1.9.22"  # Downgrade to a more stable Kotlin version
+coreKtx = "1.12.0"
+junit = "4.13.2"
+junitVersion = "1.1.5"
+espressoCore = "3.5.1"
+lifecycleRuntimeKtx = "2.7.0"
+activityCompose = "1.8.2"
+composeBom = "2023.10.01"
+ksp = "1.9.22-1.0.17"
+room = "2.6.1"
+coil = "2.5.0"
+navigation = "2.7.7"
+
+[libraries]
+androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+junit = { group = "junit", name = "junit", version.ref = "junit" }
+androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycleRuntimeKtx" }
+androidx-activity-compose = { group = "androidx.activity", name = "activity-compose", version.ref = "activityCompose" }
+androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "composeBom" }
+androidx-ui = { group = "androidx.compose.ui", name = "ui" }
+androidx-ui-graphics = { group = "androidx.compose.ui", name = "ui-graphics" }
+androidx-ui-tooling = { group = "androidx.compose.ui", name = "ui-tooling" }
+androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-tooling-preview" }
+androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
+androidx-ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
+androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
+# Room
+androidx-room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room" }
+androidx-room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room" }
+androidx-room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room" }
+# Coil
+coil-compose = { group = "io.coil-kt", name = "coil-compose", version.ref = "coil" }
+# Navigation
+androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigation" }
+
+[plugins]
+android-application = { id = "com.android.application", version.ref = "agp" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
+# kotlin-kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" } # Remove this
+kotlin-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" } # Add this
+</file>
+
+<file path="gradle/wrapper/gradle-wrapper.properties">
+#Mon Apr 14 09:09:22 CEST 2025
+distributionBase=GRADLE_USER_HOME
+distributionPath=wrapper/dists
+distributionUrl=https\://services.gradle.org/distributions/gradle-8.11.1-bin.zip
+zipStoreBase=GRADLE_USER_HOME
+zipStorePath=wrapper/dists
+</file>
+
+<file path="gradlew">
+#!/usr/bin/env sh
+
+#
+# Copyright 2015 the original author or authors.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#      https://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
+
+##############################################################################
+##
+##  Gradle start up script for UN*X
+##
+##############################################################################
+
+# Attempt to set APP_HOME
+# Resolve links: $0 may be a link
+PRG="$0"
+# Need this for relative symlinks.
+while [ -h "$PRG" ] ; do
+    ls=`ls -ld "$PRG"`
+    link=`expr "$ls" : '.*-> \(.*\)$'`
+    if expr "$link" : '/.*' > /dev/null; then
+        PRG="$link"
+    else
+        PRG=`dirname "$PRG"`"/$link"
+    fi
+done
+SAVED="`pwd`"
+cd "`dirname \"$PRG\"`/" >/dev/null
+APP_HOME="`pwd -P`"
+cd "$SAVED" >/dev/null
+
+APP_NAME="Gradle"
+APP_BASE_NAME=`basename "$0"`
+
+# Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.
+DEFAULT_JVM_OPTS='"-Xmx64m" "-Xms64m"'
+
+# Use the maximum available, or set MAX_FD != -1 to use that value.
+MAX_FD="maximum"
+
+warn () {
+    echo "$*"
+}
+
+die () {
+    echo
+    echo "$*"
+    echo
+    exit 1
+}
+
+# OS specific support (must be 'true' or 'false').
+cygwin=false
+msys=false
+darwin=false
+nonstop=false
+case "`uname`" in
+  CYGWIN* )
+    cygwin=true
+    ;;
+  Darwin* )
+    darwin=true
+    ;;
+  MINGW* )
+    msys=true
+    ;;
+  NONSTOP* )
+    nonstop=true
+    ;;
+esac
+
+CLASSPATH=$APP_HOME/gradle/wrapper/gradle-wrapper.jar
+
+
+# Determine the Java command to use to start the JVM.
+if [ -n "$JAVA_HOME" ] ; then
+    if [ -x "$JAVA_HOME/jre/sh/java" ] ; then
+        # IBM's JDK on AIX uses strange locations for the executables
+        JAVACMD="$JAVA_HOME/jre/sh/java"
+    else
+        JAVACMD="$JAVA_HOME/bin/java"
+    fi
+    if [ ! -x "$JAVACMD" ] ; then
+        die "ERROR: JAVA_HOME is set to an invalid directory: $JAVA_HOME
+
+Please set the JAVA_HOME variable in your environment to match the
+location of your Java installation."
+    fi
+else
+    JAVACMD="java"
+    which java >/dev/null 2>&1 || die "ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.
+
+Please set the JAVA_HOME variable in your environment to match the
+location of your Java installation."
+fi
+
+# Increase the maximum file descriptors if we can.
+if [ "$cygwin" = "false" -a "$darwin" = "false" -a "$nonstop" = "false" ] ; then
+    MAX_FD_LIMIT=`ulimit -H -n`
+    if [ $? -eq 0 ] ; then
+        if [ "$MAX_FD" = "maximum" -o "$MAX_FD" = "max" ] ; then
+            MAX_FD="$MAX_FD_LIMIT"
+        fi
+        ulimit -n $MAX_FD
+        if [ $? -ne 0 ] ; then
+            warn "Could not set maximum file descriptor limit: $MAX_FD"
+        fi
+    else
+        warn "Could not query maximum file descriptor limit: $MAX_FD_LIMIT"
+    fi
+fi
+
+# For Darwin, add options to specify how the application appears in the dock
+if $darwin; then
+    GRADLE_OPTS="$GRADLE_OPTS \"-Xdock:name=$APP_NAME\" \"-Xdock:icon=$APP_HOME/media/gradle.icns\""
+fi
+
+# For Cygwin or MSYS, switch paths to Windows format before running java
+if [ "$cygwin" = "true" -o "$msys" = "true" ] ; then
+    APP_HOME=`cygpath --path --mixed "$APP_HOME"`
+    CLASSPATH=`cygpath --path --mixed "$CLASSPATH"`
+
+    JAVACMD=`cygpath --unix "$JAVACMD"`
+
+    # We build the pattern for arguments to be converted via cygpath
+    ROOTDIRSRAW=`find -L / -maxdepth 1 -mindepth 1 -type d 2>/dev/null`
+    SEP=""
+    for dir in $ROOTDIRSRAW ; do
+        ROOTDIRS="$ROOTDIRS$SEP$dir"
+        SEP="|"
+    done
+    OURCYGPATTERN="(^($ROOTDIRS))"
+    # Add a user-defined pattern to the cygpath arguments
+    if [ "$GRADLE_CYGPATTERN" != "" ] ; then
+        OURCYGPATTERN="$OURCYGPATTERN|($GRADLE_CYGPATTERN)"
+    fi
+    # Now convert the arguments - kludge to limit ourselves to /bin/sh
+    i=0
+    for arg in "$@" ; do
+        CHECK=`echo "$arg"|egrep -c "$OURCYGPATTERN" -`
+        CHECK2=`echo "$arg"|egrep -c "^-"`                                 ### Determine if an option
+
+        if [ $CHECK -ne 0 ] && [ $CHECK2 -eq 0 ] ; then                    ### Added a condition
+            eval `echo args$i`=`cygpath --path --ignore --mixed "$arg"`
+        else
+            eval `echo args$i`="\"$arg\""
+        fi
+        i=`expr $i + 1`
+    done
+    case $i in
+        0) set -- ;;
+        1) set -- "$args0" ;;
+        2) set -- "$args0" "$args1" ;;
+        3) set -- "$args0" "$args1" "$args2" ;;
+        4) set -- "$args0" "$args1" "$args2" "$args3" ;;
+        5) set -- "$args0" "$args1" "$args2" "$args3" "$args4" ;;
+        6) set -- "$args0" "$args1" "$args2" "$args3" "$args4" "$args5" ;;
+        7) set -- "$args0" "$args1" "$args2" "$args3" "$args4" "$args5" "$args6" ;;
+        8) set -- "$args0" "$args1" "$args2" "$args3" "$args4" "$args5" "$args6" "$args7" ;;
+        9) set -- "$args0" "$args1" "$args2" "$args3" "$args4" "$args5" "$args6" "$args7" "$args8" ;;
+    esac
+fi
+
+# Escape application args
+save () {
+    for i do printf %s\\n "$i" | sed "s/'/'\\\\''/g;1s/^/'/;\$s/\$/' \\\\/" ; done
+    echo " "
+}
+APP_ARGS=`save "$@"`
+
+# Collect all arguments for the java command, following the shell quoting and substitution rules
+eval set -- $DEFAULT_JVM_OPTS $JAVA_OPTS $GRADLE_OPTS "\"-Dorg.gradle.appname=$APP_BASE_NAME\"" -classpath "\"$CLASSPATH\"" org.gradle.wrapper.GradleWrapperMain "$APP_ARGS"
+
+exec "$JAVACMD" "$@"
+</file>
+
+<file path="gradlew.bat">
+@rem
+@rem Copyright 2015 the original author or authors.
+@rem
+@rem Licensed under the Apache License, Version 2.0 (the "License");
+@rem you may not use this file except in compliance with the License.
+@rem You may obtain a copy of the License at
+@rem
+@rem      https://www.apache.org/licenses/LICENSE-2.0
+@rem
+@rem Unless required by applicable law or agreed to in writing, software
+@rem distributed under the License is distributed on an "AS IS" BASIS,
+@rem WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+@rem See the License for the specific language governing permissions and
+@rem limitations under the License.
+@rem
+
+@if "%DEBUG%" == "" @echo off
+@rem ##########################################################################
+@rem
+@rem  Gradle startup script for Windows
+@rem
+@rem ##########################################################################
+
+@rem Set local scope for the variables with windows NT shell
+if "%OS%"=="Windows_NT" setlocal
+
+set DIRNAME=%~dp0
+if "%DIRNAME%" == "" set DIRNAME=.
+set APP_BASE_NAME=%~n0
+set APP_HOME=%DIRNAME%
+
+@rem Resolve any "." and ".." in APP_HOME to make it shorter.
+for %%i in ("%APP_HOME%") do set APP_HOME=%%~fi
+
+@rem Add default JVM options here. You can also use JAVA_OPTS and GRADLE_OPTS to pass JVM options to this script.
+set DEFAULT_JVM_OPTS="-Xmx64m" "-Xms64m"
+
+@rem Find java.exe
+if defined JAVA_HOME goto findJavaFromJavaHome
+
+set JAVA_EXE=java.exe
+%JAVA_EXE% -version >NUL 2>&1
+if "%ERRORLEVEL%" == "0" goto execute
+
+echo.
+echo ERROR: JAVA_HOME is not set and no 'java' command could be found in your PATH.
+echo.
+echo Please set the JAVA_HOME variable in your environment to match the
+echo location of your Java installation.
+
+goto fail
+
+:findJavaFromJavaHome
+set JAVA_HOME=%JAVA_HOME:"=%
+set JAVA_EXE=%JAVA_HOME%/bin/java.exe
+
+if exist "%JAVA_EXE%" goto execute
+
+echo.
+echo ERROR: JAVA_HOME is set to an invalid directory: %JAVA_HOME%
+echo.
+echo Please set the JAVA_HOME variable in your environment to match the
+echo location of your Java installation.
+
+goto fail
+
+:execute
+@rem Setup the command line
+
+set CLASSPATH=%APP_HOME%\gradle\wrapper\gradle-wrapper.jar
+
+
+@rem Execute Gradle
+"%JAVA_EXE%" %DEFAULT_JVM_OPTS% %JAVA_OPTS% %GRADLE_OPTS% "-Dorg.gradle.appname=%APP_BASE_NAME%" -classpath "%CLASSPATH%" org.gradle.wrapper.GradleWrapperMain %*
+
+:end
+@rem End local scope for the variables with windows NT shell
+if "%ERRORLEVEL%"=="0" goto mainEnd
+
+:fail
+rem Set variable GRADLE_EXIT_CONSOLE if you need the _script_ return code instead of
+rem the _cmd.exe /c_ return code!
+if  not "" == "%GRADLE_EXIT_CONSOLE%" exit 1
+exit /b 1
+
+:mainEnd
+if "%OS%"=="Windows_NT" endlocal
+
+:omega
+</file>
+
+<file path="settings.gradle.kts">
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+
+rootProject.name = "Filmoteka"
+include(":app")
+</file>
+
+<file path="app/src/main/java/com/example/s24825/ui/addedit/FilmEditViewModel.kt">
+package com.example.s24825.ui.addedit
+
+import android.app.Application
+import android.net.Uri
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import com.example.filmoteka.R
+import com.example.s24825.data.entity.Film
+import com.example.s24825.data.entity.FilmCategories
+import com.example.s24825.data.repository.FilmRepository
+import com.example.s24825.util.ImageUtils
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
+import java.util.Calendar
+import java.util.Date
+
+class FilmEditViewModel(
+    private val repository: FilmRepository,
+    private val filmId: Long = 0,
+    private val imageUtils: ImageUtils,
+    private val application: Application
+) : ViewModel() {
+
+    private val _title = MutableStateFlow("")
+    val title: StateFlow<String> = _title
+
+    private val _releaseDate = MutableStateFlow(Date())
+    val releaseDate: StateFlow<Date> = _releaseDate
+
+    private val _category = MutableStateFlow("")
+    val category: StateFlow<String> = _category
+
+    private val _isWatched = MutableStateFlow(false)
+    val isWatched: StateFlow<Boolean> = _isWatched
+
+    private val _rating = MutableStateFlow<Int?>(null)
+    val rating: StateFlow<Int?> = _rating
+
+    private val _comment = MutableStateFlow<String?>("")
+    val comment: StateFlow<String?> = _comment
+
+    private val _posterPath = MutableStateFlow<String?>(null)
+    val posterPath: StateFlow<String?> = _posterPath
+
+    private val _isLoading = MutableStateFlow(filmId > 0)
+    val isLoading: StateFlow<Boolean> = _isLoading
+
+    private val _validationErrors = MutableStateFlow<Map<String, Int>>(emptyMap())
+    val validationErrors: StateFlow<Map<String, Int>> = _validationErrors
+
+    private val _isSaved = MutableStateFlow(false)
+    val isSaved: StateFlow<Boolean> = _isSaved
+
+    private var originalFilm: Film? = null
+
+    init {
+        if (filmId > 0) {
+            loadFilm()
+        } else {
+            // Ustaw domyślną kategorię, jeśli to nowy film, np. pierwszą z listy
+            // _category.value = FilmCategories.categories.firstOrNull() ?: ""
+            _isLoading.value = false // Dla nowego filmu nie ma ładowania
+        }
+    }
+
+    private fun loadFilm() {
+        viewModelScope.launch {
+            _isLoading.value = true
+            repository.getFilmById(filmId)?.let { film ->
+                originalFilm = film
+                _title.value = film.title
+                _releaseDate.value = film.releaseDate
+                _category.value = film.category
+                _isWatched.value = film.isWatched
+                _rating.value = film.rating
+                _comment.value = film.comment
+                _posterPath.value = film.posterPath
+            }
+            _isLoading.value = false
+        }
+    }
+
+    fun setTitle(title: String) {
+        _title.value = title
+
+        if (title.isNotBlank() && _validationErrors.value.containsKey("title")) {
+            _validationErrors.value = _validationErrors.value - "title"
+        }
+    }
+
+    fun setReleaseDate(date: Date) {
+        _releaseDate.value = date
+        if (_validationErrors.value.containsKey("releaseDate")) {
+            _validationErrors.value = _validationErrors.value - "releaseDate"
+        }
+    }
+
+    fun setCategory(category: String) {
+        _category.value = category
+        if (category.isNotBlank() && _validationErrors.value.containsKey("category")) {
+            _validationErrors.value = _validationErrors.value - "category"
+        }
+    }
+
+    fun setWatched(isWatched: Boolean) {
+        _isWatched.value = isWatched
+        // Jeśli odznaczono "obejrzane", a był błąd oceny, usuń go
+        if (!isWatched && _validationErrors.value.containsKey("rating")) {
+            _validationErrors.value = _validationErrors.value - "rating"
+        }
+        // Jeśli zaznaczono "obejrzane", ale nie ma oceny, błąd pojawi się przy walidacji
+    }
+
+    fun setRating(rating: Int?) {
+        _rating.value = rating
+        if (rating != null && _validationErrors.value.containsKey("rating")) {
+            _validationErrors.value = _validationErrors.value - "rating"
+        }
+    }
+
+    fun setComment(comment: String) {
+        _comment.value = comment
+    }
+
+    fun selectPoster(uri: Uri) {
+        viewModelScope.launch {
+            // Można dodać _isLoading.value = true tutaj, jeśli zapis obrazu trwa
+            val path = imageUtils.saveImageFromUri(uri)
+            _posterPath.value = path
+            // _isLoading.value = false
+        }
+    }
+
+    private fun validateForm(): Boolean {
+        val errors = mutableMapOf<String, Int>()
+
+        if (_title.value.isBlank()) {
+            errors["title"] = R.string.validation_error_title_empty
+        }
+
+        val calendar = Calendar.getInstance().apply { add(Calendar.YEAR, 2) }
+        if (_releaseDate.value.after(calendar.time)) {
+            errors["releaseDate"] = R.string.validation_error_date_too_far
+        }
+
+        if (_category.value.isBlank() || !FilmCategories.categories.contains(_category.value)) {
+            errors["category"] = R.string.validation_error_category_not_selected
+        }
+
+        if (_isWatched.value && _rating.value == null) {
+            errors["rating"] = R.string.validation_error_rating_required_for_watched
+        } else if (_isWatched.value && _rating.value != null && (_rating.value!! < 1 || _rating.value!! > 10)) {
+            // Dodatkowa walidacja zakresu oceny, jeśli jest wpisana
+            errors["rating"] = R.string.add_edit_hint_rating
+        }
+
+
+        _validationErrors.value = errors
+        return errors.isEmpty()
+    }
+
+    fun saveFilm() {
+        if (!validateForm()) {
+            return
+        }
+
+        viewModelScope.launch {
+            _isLoading.value = true // Pokaż ładowanie podczas zapisu
+            val filmToSave = Film(
+                id = filmId.takeIf { it > 0 } ?: 0, // Użyj 0 dla nowego filmu, inaczej istniejące ID
+                title = _title.value.trim(),
+                releaseDate = _releaseDate.value,
+                category = _category.value,
+                isWatched = _isWatched.value,
+                rating = if (_isWatched.value) _rating.value else null, // Ocena tylko jeśli obejrzane
+                comment = _comment.value?.trim()?.takeIf { it.isNotBlank() },
+                posterPath = _posterPath.value
+            )
+
+            if (filmToSave.id > 0) {
+                repository.updateFilm(filmToSave)
+            } else {
+                repository.insertFilm(filmToSave)
+            }
+            _isLoading.value = false
+            _isSaved.value = true
+        }
+    }
+
+    class Factory(
+        private val repository: FilmRepository,
+        private val filmId: Long,
+        private val imageUtils: ImageUtils,
+        private val application: Application // Dodano Application
+    ) : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(FilmEditViewModel::class.java)) {
+                @Suppress("UNCHECKED_CAST")
+                return FilmEditViewModel(repository, filmId, imageUtils, application) as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
+        }
+    }
+}
+</file>
+
+<file path="app/src/main/java/com/example/s24825/ui/list/FilmListViewModel.kt">
+package com.example.s24825.ui.list
+
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.viewModelScope
+import com.example.s24825.data.entity.Film
+import com.example.s24825.data.repository.FilmRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
+
+/**
+ * ViewModel for the film list screen.
+ *
+ * This ViewModel holds UI state and handles business logic for the film list screen,
+ * including filtering, counting, and deletion operations.
+ */
+class FilmListViewModel(private val repository: FilmRepository) : ViewModel() {
+
+    // Filter state flows
+    private val _selectedCategory = MutableStateFlow<String?>(null)
+    val selectedCategory: StateFlow<String?> = _selectedCategory.asStateFlow()
+
+    private val _selectedWatchStatus = MutableStateFlow<Boolean?>(null)
+    val selectedWatchStatus: StateFlow<Boolean?> = _selectedWatchStatus.asStateFlow()
+
+    // Film deletion dialog state
+    private val _showDeleteDialog = MutableStateFlow(false)
+    val showDeleteDialog: StateFlow<Boolean> = _showDeleteDialog.asStateFlow()
+
+    // State for the film currently marked for deletion
+    private val _filmToDelete = MutableStateFlow<Film?>(null)
+    val filmToDelete: StateFlow<Film?> = _filmToDelete.asStateFlow() // Expose as StateFlow
+
+    // Combine filters with repository data to get filtered films
+    // This Flow will automatically update when allFilms, _selectedCategory, or _selectedWatchStatus change.
+    val filteredFilms: StateFlow<List<Film>> = combine(
+        repository.allFilms, // Assuming allFilms is a Flow from the repository
+        _selectedCategory,
+        _selectedWatchStatus
+    ) { films, category, watchStatus ->
+        films.filter { film ->
+            (category == null || film.category == category) &&
+                    (watchStatus == null || film.isWatched == watchStatus)
+        }
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000), // Keep the Flow active for 5s after last subscriber
+        initialValue = emptyList()
+    )
+
+    // Get the count of films matching current filters
+    // This uses flatMapLatest to switch to a new count Flow whenever filters change.
+    val itemCount: StateFlow<Int> = combine(
+        _selectedCategory,
+        _selectedWatchStatus
+    ) { category, watchStatus ->
+        // Pair is used here just to trigger the combine when either filter changes.
+        Pair(category, watchStatus)
+    }.flatMapLatest { (category, watchStatus) ->
+        repository.getFilteredFilmsCount(category, watchStatus) // Assuming this returns Flow<Int>
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5000),
+        initialValue = 0
+    )
+
+    /**
+     * Sets the category filter.
+     * @param category The category to filter by, or null for all categories
+     */
+    fun setCategory(category: String?) {
+        _selectedCategory.value = category
+    }
+
+    /**
+     * Sets the watch status filter.
+     * @param isWatched The watch status to filter by, or null for all statuses
+     */
+    fun setWatchStatus(isWatched: Boolean?) {
+        _selectedWatchStatus.value = isWatched
+    }
+
+    /**
+     * Shows the delete confirmation dialog for a film.
+     * @param film The film to be deleted
+     */
+    fun showDeleteDialog(film: Film) {
+        _filmToDelete.value = film // Ustawiamy film do usunięcia
+        _showDeleteDialog.value = true
+    }
+
+    /**
+     * Dismisses the delete confirmation dialog.
+     */
+    fun dismissDeleteDialog() {
+        _showDeleteDialog.value = false
+        _filmToDelete.value = null // Czyścimy film po zamknięciu dialogu
+    }
+
+    /**
+     * Deletes the selected film.
+     * The dialog dismissal is handled by the UI after this action.
+     */
+    fun deleteFilm() {
+        _filmToDelete.value?.let { filmToDelete -> // Używamy _filmToDelete.value
+            viewModelScope.launch {
+                repository.deleteFilm(filmToDelete)
+                // Nie ma potrzeby zmiany _showDeleteDialog czy _filmToDelete tutaj,
+                // ponieważ dialog jest zamykany w UI (np. w onConfirm w FilmListScreen),
+                // a dismissDeleteDialog() jest tam wywoływane, co czyści _filmToDelete.
+                // Jeśli jednak chcemy mieć pewność, można dodać:
+                // _filmToDelete.value = null
+                // _showDeleteDialog.value = false
+                // Ale to może być redundantne, jeśli UI już to robi.
+            }
+        }
+    }
+
+    /**
+     * Factory for creating FilmListViewModel instances with the repository dependency.
+     */
+    class Factory(private val repository: FilmRepository) : ViewModelProvider.Factory {
+        override fun <T : ViewModel> create(modelClass: Class<T>): T {
+            if (modelClass.isAssignableFrom(FilmListViewModel::class.java)) {
+                @Suppress("UNCHECKED_CAST")
+                return FilmListViewModel(repository) as T
+            }
+            throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
+        }
+    }
+}
+</file>
+
+<file path="app/src/main/java/com/example/s24825/ui/main/MainActivity.kt">
+package com.example.s24825.ui.main
+
+import android.os.Bundle
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.s24825.ui.addedit.AddEditFilmScreen
+import com.example.s24825.ui.details.FilmDetailsScreen
+import com.example.s24825.ui.list.FilmListScreen
+import com.example.s24825.ui.theme.FilmotekaTheme
+
+
+//bazowa klasa do aktywnosci dziedziczy po klasie ComponentActivity zeby moc uzywac composable z Jetpack compose
+class MainActivity : ComponentActivity() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        //root contentu
+        setContent {
+            FilmotekaTheme {
+
+                //rysuje tło
+                Surface(
+                    modifier = Modifier.fillMaxSize(),
+                    color = MaterialTheme.colorScheme.background
+                ) {
+                    FilmotekaApp()
+                }
+            }
+        }
+    }
+}
+
+
+object FilmotekaDestinations {
+    const val FILM_LIST_ROUTE = "film_list"
+    const val FILM_DETAILS_ROUTE = "film_details"
+    const val FILM_EDIT_ROUTE = "film_edit"
+    const val FILM_ADD_ROUTE = "film_add"
+
+    // Route with parameters
+    const val FILM_DETAILS_ROUTE_WITH_ARGS = "film_details/{filmId}"
+    const val FILM_EDIT_ROUTE_WITH_ARGS = "film_edit/{filmId}"
+
+    // Arguments
+    const val FILM_ID_ARG = "filmId"
+}
+
+@Composable
+fun FilmotekaApp(navController: NavHostController = rememberNavController()) {
+
+
+    //tworzymy kontroler nawigacji ze stanardowa wartoscia ktora zapamietuje stan nawigacji przy rekompozycji
+    NavHost(
+        navController = navController,
+        startDestination = FilmotekaDestinations.FILM_LIST_ROUTE
+    ) {
+        // rejestrujemy ekrany pod danymi routami:
+
+        composable(FilmotekaDestinations.FILM_LIST_ROUTE) {
+            FilmListScreen(
+                onFilmClick = { filmId, isWatched ->
+                    if (isWatched) {
+                        navController.navigate("${FilmotekaDestinations.FILM_DETAILS_ROUTE}/$filmId")
+                    } else {
+                        navController.navigate("${FilmotekaDestinations.FILM_EDIT_ROUTE}/$filmId")
+                    }
+                },
+                onAddClick = {
+                    navController.navigate(FilmotekaDestinations.FILM_ADD_ROUTE)
+                }
+            )
+        }
+
+        composable(route = FilmotekaDestinations.FILM_DETAILS_ROUTE_WITH_ARGS,
+            arguments = listOf(navArgument(FilmotekaDestinations.FILM_ID_ARG) { type = NavType.LongType }))
+
+
+        //dodajemy nowy ekran do backstacku i przekazujemy mu parametry za pomoca argumentow w sciezce
+        { backStackEntry ->
+            val filmId = backStackEntry.arguments?.getLong(FilmotekaDestinations.FILM_ID_ARG) ?: 0L
+
+            FilmDetailsScreen(
+                filmId = filmId,
+                onBackClick = { navController.popBackStack() })
+        }
+
+        // Film Edit Screen (For unwatched films)
+        composable(
+            route = FilmotekaDestinations.FILM_EDIT_ROUTE_WITH_ARGS,
+            arguments = listOf(
+                navArgument(FilmotekaDestinations.FILM_ID_ARG) {
+                    type = NavType.LongType
+                }
+            )
+        ) { backStackEntry ->
+            val filmId = backStackEntry.arguments?.getLong(FilmotekaDestinations.FILM_ID_ARG) ?: 0L
+            AddEditFilmScreen(
+                filmId = filmId,
+                onBackClick = {
+                    navController.popBackStack()
+                },
+                onSaveClick = {
+                    navController.popBackStack()
+                }
+            )
+        }
+
+        // Film Add Screen (For new films)
+        composable(FilmotekaDestinations.FILM_ADD_ROUTE) {
+            AddEditFilmScreen(
+                filmId = 0L, // 0 means new film
+                onBackClick = {
+                    navController.popBackStack()
+                },
+                onSaveClick = {
+                    navController.popBackStack()
+                }
+            )
+        }
+    }
+}
+</file>
+
+<file path="app/src/main/java/com/example/s24825/ui/addedit/AddEditFilmScreen.kt">
+package com.example.s24825.ui.addedit
+
+import android.net.Uri
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import com.example.filmoteka.R
+import com.example.s24825.FilmotekaApplication
+import com.example.s24825.data.entity.FilmCategories
+import java.text.SimpleDateFormat
+import java.util.*
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun AddEditFilmScreen(
+    filmId: Long,
+    onBackClick: () -> Unit,
+    onSaveClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+    val app = context.applicationContext as FilmotekaApplication
+    val viewModel: FilmEditViewModel = viewModel(
+        factory = FilmEditViewModel.Factory(app.repository, filmId, app.imageUtils, app)
+    )
+
+    // Stany pobierane z ViewModelu
+    val title by viewModel.title.collectAsState()
+    val releaseDate by viewModel.releaseDate.collectAsState()
+    val category by viewModel.category.collectAsState()
+    val isWatched by viewModel.isWatched.collectAsState()
+    val rating by viewModel.rating.collectAsState()
+    val comment by viewModel.comment.collectAsState()
+    val posterPath by viewModel.posterPath.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+    val validationErrors by viewModel.validationErrors.collectAsState()
+    val isSaved by viewModel.isSaved.collectAsState()
+
+    // Formatter daty
+    val dateFormat = remember { SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()) }
+
+    // Launcher do wybierania obrazu
+    val imagePicker = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let { viewModel.selectPoster(it) }
+    }
+
+    // Efekt uruchamiany po zapisaniu filmu
+    LaunchedEffect(isSaved) {
+        if (isSaved) {
+            onSaveClick()
+        }
+    }
+
+    // Tytuł ekranu w zależności od trybu (dodawanie/edycja)
+    val screenTitle = if (filmId > 0) stringResource(R.string.edit_film_screen_title)
+    else stringResource(R.string.add_film_screen_title)
+
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text(screenTitle) },
+                navigationIcon = {
+                    IconButton(onClick = onBackClick) {
+                        Icon(
+                            imageVector = Icons.Default.ArrowBack,
+                            contentDescription = stringResource(R.string.content_desc_arrow_back)
+                        )
+                    }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.primary,
+                    titleContentColor = MaterialTheme.colorScheme.onPrimary,
+                    navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
+                )
+            )
+        }
+    ) { innerPadding ->
+        Box(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            if (isLoading) {
+                // Wskaźnik ładowania
+                CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+            } else {
+                // Główna kolumna formularza
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState())
+                        .padding(16.dp)
+                ) {
+                    // Poszczególne pola formularza jako osobne komponenty
+                    TitleInputField(title, viewModel::setTitle, validationErrors["title"])
+                    Spacer(modifier = Modifier.height(16.dp))
+                    ReleaseDateInputField(releaseDate, viewModel::setReleaseDate, validationErrors["releaseDate"], dateFormat)
+                    Spacer(modifier = Modifier.height(16.dp))
+                    CategoryInputField(category, viewModel::setCategory, validationErrors["category"])
+                    Spacer(modifier = Modifier.height(16.dp))
+                    WatchedStatusSwitch(isWatched, viewModel::setWatched)
+                    if (isWatched) {
+                        Spacer(modifier = Modifier.height(16.dp))
+                        RatingInputField(rating, viewModel::setRating, validationErrors["rating"])
+                    }
+                    Spacer(modifier = Modifier.height(16.dp))
+                    CommentInputField(comment, viewModel::setComment)
+                    Spacer(modifier = Modifier.height(16.dp))
+                    PosterInputField(posterPath, imagePicker::launch)
+                    Spacer(modifier = Modifier.height(24.dp))
+                    SaveButton(isLoading, viewModel::saveFilm)
+                }
+            }
+        }
+    }
+}
+
+// Prywatne funkcje Composable dla każdego pola formularza
+// To czyni główną funkcję AddEditFilmScreen bardziej czytelną
+
+@Composable
+private fun TitleInputField(
+    title: String,
+    onTitleChange: (String) -> Unit,
+    errorResId: Int?
+) {
+    OutlinedTextField(
+        value = title,
+        onValueChange = onTitleChange,
+        label = { Text(stringResource(R.string.add_edit_label_title)) },
+        modifier = Modifier.fillMaxWidth(),
+        isError = errorResId != null,
+        supportingText = {
+            errorResId?.let { Text(text = stringResource(id = it)) }
+        },
+        singleLine = true
+    )
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun ReleaseDateInputField(
+    releaseDate: Date,
+    onReleaseDateChange: (Date) -> Unit,
+    errorResId: Int?,
+    dateFormat: SimpleDateFormat
+) {
+    var showDatePickerDialog by remember { mutableStateOf(false) }
+
+    OutlinedTextField(
+        value = dateFormat.format(releaseDate),
+        onValueChange = { /* Read-only */ },
+        label = { Text(stringResource(R.string.add_edit_label_release_date)) },
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable { showDatePickerDialog = true },
+        readOnly = true,
+        trailingIcon = {
+            Icon(
+                imageVector = Icons.Default.DateRange,
+                contentDescription = stringResource(R.string.content_desc_date_range_icon),
+                modifier = Modifier.clickable { showDatePickerDialog = true }
+            )
+        },
+        isError = errorResId != null,
+        supportingText = {
+            errorResId?.let { Text(text = stringResource(id = it)) }
+        }
+    )
+
+    if (showDatePickerDialog) {
+        val currentCalendar = Calendar.getInstance().apply { time = releaseDate }
+        val datePickerState = rememberDatePickerState(initialSelectedDateMillis = currentCalendar.timeInMillis)
+        DatePickerDialog(
+            onDismissRequest = { showDatePickerDialog = false },
+            confirmButton = {
+                TextButton(onClick = {
+                    datePickerState.selectedDateMillis?.let { onReleaseDateChange(Date(it)) }
+                    showDatePickerDialog = false
+                }) { Text(stringResource(android.R.string.ok)) }
+            },
+            dismissButton = {
+                TextButton(onClick = { showDatePickerDialog = false }) { Text(stringResource(android.R.string.cancel)) }
+            }
+        ) {
+            DatePicker(
+                state = datePickerState,
+                dateValidator = { timestamp ->
+                    val maxDateCalendar = Calendar.getInstance().apply { add(Calendar.YEAR, 2) }
+                    timestamp <= maxDateCalendar.timeInMillis
+                }
+            )
+        }
+    }
+}
+
+@Composable
+private fun CategoryInputField(
+    category: String,
+    onCategoryChange: (String) -> Unit,
+    errorResId: Int?
+) {
+    var showCategoryDropdown by remember { mutableStateOf(false) }
+
+    Box(modifier = Modifier.fillMaxWidth()) {
+        OutlinedTextField(
+            value = category,
+            onValueChange = { /* Read-only */ },
+            label = { Text(stringResource(R.string.add_edit_label_category)) },
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable { showCategoryDropdown = true },
+            readOnly = true,
+            trailingIcon = {
+                Icon(
+                    imageVector = Icons.Default.ArrowDropDown,
+                    contentDescription = stringResource(R.string.content_desc_arrow_drop_down)
+                )
+            },
+            isError = errorResId != null,
+            supportingText = {
+                errorResId?.let { Text(text = stringResource(id = it)) }
+            }
+        )
+        DropdownMenu(
+            expanded = showCategoryDropdown,
+            onDismissRequest = { showCategoryDropdown = false }
+        ) {
+            FilmCategories.categories.forEach { categoryOption ->
+                DropdownMenuItem(
+                    text = { Text(categoryOption) },
+                    onClick = {
+                        onCategoryChange(categoryOption)
+                        showCategoryDropdown = false
+                    }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun WatchedStatusSwitch(
+    isWatched: Boolean,
+    onWatchedChange: (Boolean) -> Unit
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.fillMaxWidth()
+    ) {
+        Text(
+            text = stringResource(R.string.add_edit_label_status),
+            style = MaterialTheme.typography.bodyLarge,
+            modifier = Modifier.weight(1f)
+        )
+        Text(
+            text = if (isWatched) stringResource(R.string.add_edit_status_watched)
+            else stringResource(R.string.add_edit_status_unwatched),
+            style = MaterialTheme.typography.bodyMedium
+        )
+        Spacer(modifier = Modifier.width(8.dp))
+        Switch(checked = isWatched, onCheckedChange = onWatchedChange)
+    }
+}
+
+@Composable
+private fun RatingInputField(
+    rating: Int?,
+    onRatingChange: (Int?) -> Unit,
+    errorResId: Int?
+) {
+    OutlinedTextField(
+        value = rating?.toString() ?: "",
+        onValueChange = {
+            val newRating = it.toIntOrNull()
+            if (it.isEmpty()) onRatingChange(null)
+            else if (newRating != null && newRating in 1..10) onRatingChange(newRating)
+            else if (newRating == null && it.length <= 2) { /* Allow intermediate typing */ }
+        },
+        label = { Text(stringResource(R.string.add_edit_label_rating)) },
+        modifier = Modifier.fillMaxWidth(),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        isError = errorResId != null,
+        supportingText = {
+            errorResId?.let { Text(text = stringResource(id = it)) }
+                ?: Text(stringResource(R.string.add_edit_hint_rating))
+        },
+        singleLine = true
+    )
+}
+
+@Composable
+private fun CommentInputField(
+    comment: String?,
+    onCommentChange: (String) -> Unit
+) {
+    OutlinedTextField(
+        value = comment ?: "",
+        onValueChange = onCommentChange,
+        label = { Text(stringResource(R.string.add_edit_label_comment)) },
+        modifier = Modifier.fillMaxWidth(),
+        minLines = 3
+    )
+}
+
+@Composable
+private fun PosterInputField(
+    posterPath: String?,
+    onPosterSelectRequest: (String) -> Unit // Zmieniono typ launchera
+) {
+    Text(
+        text = stringResource(R.string.add_edit_label_poster),
+        style = MaterialTheme.typography.bodyLarge
+    )
+    Spacer(modifier = Modifier.height(8.dp))
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(200.dp)
+            .clip(RoundedCornerShape(8.dp))
+            .border(
+                width = 1.dp,
+                color = MaterialTheme.colorScheme.outline,
+                shape = RoundedCornerShape(8.dp)
+            )
+            .clickable { onPosterSelectRequest("image/*") }, // Wywołanie przekazanej funkcji
+        contentAlignment = Alignment.Center
+    ) {
+        if (posterPath != null) {
+            AsyncImage(
+                model = ImageRequest.Builder(LocalContext.current)
+                    .data(posterPath)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = stringResource(R.string.film_item_poster_description),
+                contentScale = ContentScale.Fit,
+                modifier = Modifier.fillMaxSize()
+            )
+        } else {
+            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                Icon(
+                    imageVector = Icons.Default.PlayArrow,
+                    contentDescription = stringResource(R.string.content_desc_play_arrow_icon),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                    modifier = Modifier.size(40.dp)
+                )
+                Spacer(modifier = Modifier.height(8.dp))
+                Text(
+                    text = stringResource(R.string.add_edit_select_poster_from_gallery),
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun SaveButton(
+    isLoading: Boolean,
+    onSaveClick: () -> Unit
+) {
+    Button(
+        onClick = onSaveClick,
+        modifier = Modifier.fillMaxWidth(),
+        enabled = !isLoading
+    ) {
+        Text(stringResource(R.string.add_edit_save_button))
+    }
+}
+</file>
+
+<file path="app/src/main/java/com/example/s24825/ui/components/FilmItem.kt">
+package com.example.s24825.ui.components
+
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import com.example.filmoteka.R // ZASTĄP POPRAWNYM IMPORTEM R TWOJEGO PROJEKTU
+import com.example.s24825.data.entity.Film
+import java.text.SimpleDateFormat
+import java.util.Locale
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+fun FilmItem(
+    film: Film,
+    onClick: () -> Unit,
+    onLongClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    // Używamy remember, aby uniknąć tworzenia obiektu przy każdej rekompozycji
+    val dateFormat = remember { SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()) }
+    val context = LocalContext.current
+
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .combinedClickable(
+                onClick = onClick,
+                onLongClick = onLongClick
+            ),
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp),
+        shape = RoundedCornerShape(8.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(IntrinsicSize.Min) // Dopasowuje wysokość do zawartości, ale może wymagać testów
+        ) {
+            FilmItemPoster(film.posterPath, context)
+
+            Column(
+                modifier = Modifier
+                    .weight(1f) // Pozwala tej kolumnie zająć pozostałą przestrzeń
+                    .fillMaxHeight() // Wypełnia wysokość wiersza
+                    .padding(horizontal = 12.dp, vertical = 8.dp),
+                verticalArrangement = Arrangement.SpaceBetween // Rozkłada elementy
+            ) {
+                FilmItemTextInfo(film = film, dateFormat = dateFormat)
+                FilmItemStatusOrRatingInfo(film = film)
+            }
+        }
+    }
+}
+
+@Composable
+private fun FilmItemPoster(posterPath: String?, context: android.content.Context) {
+    Box(
+        modifier = Modifier
+            .width(80.dp)
+            .fillMaxHeight() // Wypełnia wysokość wiersza
+            .clip(RoundedCornerShape(topStart = 8.dp, bottomStart = 8.dp))
+            .background(MaterialTheme.colorScheme.surfaceVariant),
+        contentAlignment = Alignment.Center
+    ) {
+        if (posterPath != null) {
+            AsyncImage(
+                model = ImageRequest.Builder(context)
+                    .data(posterPath)
+                    .crossfade(true)
+                    .build(),
+                contentDescription = stringResource(R.string.film_item_poster_description),
+                contentScale = ContentScale.Crop, // Crop może lepiej wypełnić przestrzeń
+                modifier = Modifier.fillMaxSize()
+            )
+        } else {
+            Icon(
+                imageVector = Icons.Default.PlayArrow,
+                contentDescription = stringResource(R.string.film_item_no_poster_description),
+                tint = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.6f),
+                modifier = Modifier.size(40.dp)
+            )
+        }
+    }
+}
+
+@Composable
+private fun FilmItemTextInfo(film: Film, dateFormat: SimpleDateFormat) {
+    Column {
+        Text(
+            text = film.title,
+            style = MaterialTheme.typography.titleMedium,
+            fontWeight = FontWeight.Bold,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis
+        )
+        Spacer(modifier = Modifier.height(2.dp)) // Mały odstęp
+        Text(
+            text = stringResource(
+                R.string.film_item_label_premiere_date,
+                dateFormat.format(film.releaseDate)
+            ),
+            style = MaterialTheme.typography.bodySmall, // Mniejszy tekst dla daty i kategorii
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+        Text(
+            text = stringResource(R.string.film_item_label_category, film.category),
+            style = MaterialTheme.typography.bodySmall, // Mniejszy tekst
+            color = MaterialTheme.colorScheme.onSurfaceVariant
+        )
+    }
+}
+
+@Composable
+private fun FilmItemStatusOrRatingInfo(film: Film) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier.padding(top = 4.dp) // Odstęp od górnych tekstów
+    ) {
+        if (film.isWatched) {
+            Icon(
+                imageVector = Icons.Default.Star,
+                contentDescription = stringResource(R.string.film_item_rating_icon_description),
+                tint = MaterialTheme.colorScheme.tertiary,
+                modifier = Modifier.size(18.dp) // Nieco mniejsza ikona
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Text(
+                text = stringResource(
+                    R.string.film_item_label_rating,
+                    film.rating?.toString() ?: stringResource(R.string.film_item_rating_none)
+                ),
+                style = MaterialTheme.typography.labelLarge, // Użycie labelLarge dla statusu/oceny
+                fontWeight = FontWeight.Bold
+            )
+        } else {
+            Text(
+                text = stringResource(R.string.film_item_status_unwatched),
+                style = MaterialTheme.typography.labelLarge, // Użycie labelLarge
+                color = MaterialTheme.colorScheme.secondary,
+                fontWeight = FontWeight.SemiBold
+            )
+        }
+    }
+}
+</file>
+
+<file path="app/src/main/java/com/example/s24825/ui/components/FilterOptions.kt">
+package com.example.s24825.ui.components
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import com.example.filmoteka.R
+import com.example.s24825.data.entity.FilmCategories
+
+
+@Composable
+fun FilterOptions(
+    selectedCategory: String?,
+    selectedWatchStatus: Boolean?,
+    onCategorySelected: (String?) -> Unit,
+    onWatchStatusSelected: (Boolean?) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+    ) {
+        CategoryFilters(selectedCategory, onCategorySelected)
+        Spacer(modifier = Modifier.height(12.dp))
+        WatchStatusFilters(selectedWatchStatus, onWatchStatusSelected)
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun CategoryFilters(
+    selectedCategory: String?,
+    onCategorySelected: (String?) -> Unit
+) {
+    val categoryOptions = remember {
+        listOf(null to R.string.filter_option_all_categories) + // Używamy ID zasobu
+                FilmCategories.categories.map { category ->
+                    category to when (category) { // Mapowanie na ID zasobów dla kategorii
+                        FilmCategories.FILM -> R.string.category_film
+                        FilmCategories.SERIAL -> R.string.category_serial
+                        FilmCategories.DOKUMENT -> R.string.category_documentary
+                        else -> 0 // Lub jakiś domyślny string, jeśli kategorie są dynamiczne
+                    }
+                }
+    }
+
+    Text(
+        text = stringResource(R.string.filter_label_category),
+        style = MaterialTheme.typography.titleSmall,
+        color = MaterialTheme.colorScheme.onSurface
+    )
+    Spacer(modifier = Modifier.height(4.dp))
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(vertical = 4.dp)
+    ) {
+        items(categoryOptions, key = { it.first ?: "all_cat_key" }) { (categoryValue, categoryLabelResId) ->
+            if (categoryLabelResId != 0) { // Sprawdzamy, czy mamy poprawny ID zasobu
+                FilterChip(
+                    selected = selectedCategory == categoryValue,
+                    onClick = { onCategorySelected(categoryValue) },
+                    label = { Text(stringResource(id = categoryLabelResId)) },
+                    colors = FilterChipDefaults.filterChipColors(
+                        selectedContainerColor = MaterialTheme.colorScheme.primary,
+                        selectedLabelColor = Color.White
+                    )
+                )
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun WatchStatusFilters(
+    selectedWatchStatus: Boolean?,
+    onWatchStatusSelected: (Boolean?) -> Unit
+) {
+    val watchStatusOptions = remember {
+        listOf(
+            null to R.string.filter_option_all_statuses,
+            true to R.string.filter_option_watched,
+            false to R.string.filter_option_unwatched
+        )
+    }
+
+    Text(
+        text = stringResource(R.string.filter_label_status),
+        style = MaterialTheme.typography.titleSmall,
+        color = MaterialTheme.colorScheme.onSurface
+    )
+    Spacer(modifier = Modifier.height(4.dp))
+    LazyRow(
+        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(vertical = 4.dp)
+    ) {
+        items(watchStatusOptions, key = { it.first?.toString() ?: "all_stat_key" }) { (statusValue, statusLabelResId) ->
+            FilterChip(
+                selected = selectedWatchStatus == statusValue,
+                onClick = { onWatchStatusSelected(statusValue) },
+                label = { Text(stringResource(id = statusLabelResId)) },
+                colors = FilterChipDefaults.filterChipColors(
+                    selectedContainerColor = MaterialTheme.colorScheme.primary,
+                    selectedLabelColor = Color.White
+                )
+            )
+        }
+    }
+}
+</file>
+
+<file path="app/src/main/java/com/example/s24825/ui/details/FilmDetailsScreen.kt">
+package com.example.s24825.ui.details
+
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Star
+import androidx.compose.material3.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
+import com.example.filmoteka.R
+import com.example.s24825.FilmotekaApplication
+import com.example.s24825.data.entity.Film
+import java.text.SimpleDateFormat
+import java.util.*
+
+@Composable
+fun FilmDetailsScreen(
+    filmId: Long,
+    onBackClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+    val app = context.applicationContext as FilmotekaApplication
+    val viewModel: FilmDetailViewModel = viewModel(
+        factory = FilmDetailViewModel.Factory(app.repository, filmId)
+    )
+
+    val film by viewModel.film.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+
+    val dateFormat = remember { SimpleDateFormat("dd.MM.yyyy", Locale.getDefault()) }
+
+    Scaffold(
+        topBar = { FilmDetailsTopAppBar(onBackClick) },
+        modifier = modifier
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            when {
+                isLoading -> LoadingIndicator()
+                film == null -> FilmNotFoundDisplay()
+                else -> FilmDetailsContent(film!!, dateFormat) // Wiemy, że film nie jest null
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun FilmDetailsTopAppBar(onBackClick: () -> Unit) {
+    TopAppBar(
+        title = { Text(stringResource(R.string.film_details_screen_title)) },
+        navigationIcon = {
+            IconButton(onClick = onBackClick) {
+                Icon(
+                    imageVector = Icons.Default.ArrowBack,
+                    contentDescription = stringResource(R.string.content_desc_arrow_back)
+                )
+            }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            titleContentColor = MaterialTheme.colorScheme.onPrimary,
+            navigationIconContentColor = MaterialTheme.colorScheme.onPrimary
+        )
+    )
+}
+
+@Composable
+private fun BoxScope.LoadingIndicator() { // Używamy BoxScope
+    CircularProgressIndicator(modifier = Modifier.align(Alignment.Center))
+}
+
+@Composable
+private fun BoxScope.FilmNotFoundDisplay() { // Używamy BoxScope
+    Text(
+        text = stringResource(R.string.film_details_error_not_found),
+        style = MaterialTheme.typography.bodyLarge,
+        textAlign = TextAlign.Center,
+        modifier = Modifier
+            .align(Alignment.Center)
+            .padding(16.dp)
+    )
+}
+
+@Composable
+private fun FilmDetailsContent(film: Film, dateFormat: SimpleDateFormat) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .padding(16.dp)
+    ) {
+        PosterDisplay(film.posterPath)
+        Spacer(modifier = Modifier.height(16.dp))
+        Text(text = film.title, style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold)
+        Spacer(modifier = Modifier.height(8.dp))
+        InfoText(stringResource(R.string.film_details_label_release_date, dateFormat.format(film.releaseDate)))
+        Spacer(modifier = Modifier.height(8.dp))
+        InfoText(stringResource(R.string.film_details_label_category, film.category))
+        Spacer(modifier = Modifier.height(8.dp))
+        StatusAndRatingDisplay(film.isWatched, film.rating)
+        film.comment?.takeIf { it.isNotBlank() }?.let { comment ->
+            CommentDisplay(comment)
+        }
+        if (film.isWatched) {
+            ReadOnlyMessageDisplay()
+        }
+    }
+}
+
+@Composable
+private fun PosterDisplay(posterPath: String?) {
+    if (posterPath != null) {
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(posterPath)
+                .crossfade(true)
+                .build(),
+            contentDescription = stringResource(R.string.film_item_poster_description),
+            contentScale = ContentScale.FillWidth,
+            modifier = Modifier
+                .fillMaxWidth()
+                .heightIn(min = 200.dp, max = 300.dp)
+                .clip(MaterialTheme.shapes.medium)
+        )
+    } else {
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(240.dp)
+                .background(MaterialTheme.colorScheme.surfaceVariant, MaterialTheme.shapes.medium),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = stringResource(R.string.film_details_no_poster),
+                style = MaterialTheme.typography.bodyLarge,
+                color = MaterialTheme.colorScheme.onSurfaceVariant
+            )
+        }
+    }
+}
+
+@Composable
+private fun InfoText(text: String) {
+    Text(text = text, style = MaterialTheme.typography.bodyLarge)
+}
+
+@Composable
+private fun StatusAndRatingDisplay(isWatched: Boolean, rating: Int?) {
+    Row(verticalAlignment = Alignment.CenterVertically) {
+        Text(
+            text = if (isWatched) stringResource(R.string.film_details_label_status_watched)
+            else stringResource(R.string.film_details_label_status_unwatched),
+            style = MaterialTheme.typography.bodyLarge
+        )
+        if (isWatched && rating != null) {
+            Spacer(modifier = Modifier.width(16.dp))
+            Icon(
+                imageVector = Icons.Default.Star,
+                contentDescription = stringResource(R.string.content_desc_star_icon),
+                tint = MaterialTheme.colorScheme.tertiary
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Text(
+                text = stringResource(R.string.film_details_label_rating, rating.toString()),
+                style = MaterialTheme.typography.bodyLarge,
+                fontWeight = FontWeight.Bold
+            )
+        }
+    }
+}
+
+@Composable
+private fun CommentDisplay(comment: String) {
+    Spacer(modifier = Modifier.height(16.dp))
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        color = MaterialTheme.colorScheme.surfaceVariant,
+        shape = MaterialTheme.shapes.medium
+    ) {
+        Column(modifier = Modifier.padding(16.dp)) {
+            Text(
+                text = stringResource(R.string.film_details_label_comment_section),
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(text = comment, style = MaterialTheme.typography.bodyLarge)
+        }
+    }
+}
+
+@Composable
+private fun ReadOnlyMessageDisplay() {
+    Spacer(modifier = Modifier.height(24.dp))
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.5f),
+        shape = MaterialTheme.shapes.medium
+    ) {
+        Text(
+            text = stringResource(R.string.film_details_read_only_message),
+            style = MaterialTheme.typography.bodyMedium,
+            textAlign = TextAlign.Center,
+            modifier = Modifier.padding(12.dp),
+            color = MaterialTheme.colorScheme.onErrorContainer
+        )
+    }
+}
+</file>
+
+<file path="app/src/main/java/com/example/s24825/ui/list/FilmListScreen.kt">
+package com.example.s24825.ui.list
+
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
+import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.filmoteka.R // ZASTĄP POPRAWNYM IMPORTEM R
+import com.example.s24825.FilmotekaApplication
+import com.example.s24825.data.entity.Film
+import com.example.s24825.ui.components.FilterOptions
+import com.example.s24825.ui.components.FilmItem
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun FilmListScreen(
+    onFilmClick: (Long, Boolean) -> Unit,
+    onAddClick: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val context = LocalContext.current
+    val app = context.applicationContext as FilmotekaApplication
+    val viewModel: FilmListViewModel = viewModel(
+        factory = FilmListViewModel.Factory(app.repository)
+    )
+
+    val films by viewModel.filteredFilms.collectAsState(initial = emptyList())
+    val selectedCategory by viewModel.selectedCategory.collectAsState()
+    val selectedWatchStatus by viewModel.selectedWatchStatus.collectAsState()
+    val showDeleteDialog by viewModel.showDeleteDialog.collectAsState()
+    val filmToDelete by viewModel.filmToDelete.collectAsState() // Dodajemy stan dla filmu do usunięcia
+    val itemCount by viewModel.itemCount.collectAsState()
+
+    Scaffold(
+        topBar = { FilmListTopAppBar() },
+        floatingActionButton = { FilmListFloatingActionButton(onAddClick) },
+        modifier = modifier
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            FilterOptions(
+                selectedCategory = selectedCategory,
+                selectedWatchStatus = selectedWatchStatus,
+                onCategorySelected = viewModel::setCategory,
+                onWatchStatusSelected = viewModel::setWatchStatus
+            )
+
+            ItemCountDisplay(itemCount)
+
+            if (films.isEmpty()) {
+                EmptyListDisplay()
+            } else {
+                FilmsLazyList(
+                    films = films,
+                    onFilmClick = onFilmClick,
+                    onFilmLongClick = viewModel::showDeleteDialog // Przekazujemy referencję do funkcji
+                )
+            }
+        }
+    }
+
+    if (showDeleteDialog && filmToDelete != null) {
+        DeleteConfirmationDialog(
+            filmTitle = filmToDelete!!.title, // Bezpieczne odwołanie, bo sprawdzamy showDeleteDialog && filmToDelete != null
+            onConfirm = {
+                viewModel.deleteFilm()
+                viewModel.dismissDeleteDialog() // Ukryj dialog po potwierdzeniu
+            },
+            onDismiss = viewModel::dismissDeleteDialog
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun FilmListTopAppBar() {
+    TopAppBar(
+        title = { Text(stringResource(id = R.string.film_list_title)) },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = MaterialTheme.colorScheme.primary,
+            titleContentColor = MaterialTheme.colorScheme.onPrimary
+        )
+    )
+}
+
+@Composable
+private fun FilmListFloatingActionButton(onAddClick: () -> Unit) {
+    FloatingActionButton(
+        onClick = onAddClick,
+        containerColor = MaterialTheme.colorScheme.primary
+    ) {
+        Icon(
+            imageVector = Icons.Default.Add,
+            contentDescription = stringResource(id = R.string.fab_add_film_description),
+            tint = MaterialTheme.colorScheme.onPrimary
+        )
+    }
+}
+
+@Composable
+private fun ItemCountDisplay(itemCount: Int) {
+    Text(
+        text = stringResource(id = R.string.item_count, itemCount),
+        style = MaterialTheme.typography.bodyMedium,
+        color = MaterialTheme.colorScheme.onSurfaceVariant,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp, vertical = 8.dp)
+    )
+}
+
+@Composable
+private fun ColumnScope.EmptyListDisplay() { // Używamy ColumnScope, aby poprawnie użyć weight
+    Box(
+        modifier = Modifier
+            .weight(1f) // Aby Box wypełnił dostępną przestrzeń w Column
+            .fillMaxWidth()
+            .padding(16.dp),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = stringResource(id = R.string.no_films_matching),
+            style = MaterialTheme.typography.bodyLarge,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center
+        )
+    }
+}
+
+@Composable
+private fun FilmsLazyList(
+    films: List<Film>,
+    onFilmClick: (Long, Boolean) -> Unit,
+    onFilmLongClick: (Film) -> Unit // Zmieniono parametr na (Film) -> Unit
+) {
+    LazyColumn(
+        modifier = Modifier.fillMaxSize(),
+        contentPadding = PaddingValues(start = 8.dp, end = 8.dp, bottom = 80.dp)
+    ) {
+        items(films, key = { film -> film.id }) { film ->
+            FilmItem(
+                film = film,
+                onClick = { onFilmClick(film.id, film.isWatched) },
+                onLongClick = { onFilmLongClick(film) } // Przekazujemy cały obiekt Film
+            )
+        }
+    }
+}
+
+@Composable
+private fun DeleteConfirmationDialog(
+    filmTitle: String,
+    onConfirm: () -> Unit,
+    onDismiss: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(id = R.string.delete_dialog_title)) },
+        text = {
+            Text(
+                stringResource(
+                    id = R.string.delete_dialog_message_with_title, // Nowy string zasobu
+                    filmTitle
+                )
+            )
+        },
+        confirmButton = {
+            TextButton(onClick = onConfirm) {
+                Text(stringResource(id = R.string.delete_dialog_confirm_button))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(id = R.string.delete_dialog_dismiss_button))
+            }
+        }
+    )
+}
+</file>
+
+<file path="app/src/main/res/values/strings.xml">
+<resources>
+    <string name="app_name">Filmoteka</string>
+
+    <string name="save">Zapisz</string>
+    <string name="back">Powrót</string>
+    <string name="delete">Usuń</string>
+    <string name="cancel">Anuluj</string>
+    <string name="all">Wszystkie</string>
+    <string name="error_generic">Wystąpił błąd</string>
+    <string name="loading">Ładowanie…</string>
+
+    <string name="film_list_title">Filmoteka</string>
+    <string name="fab_add_film_description">Dodaj nowy film</string>
+    <string name="item_count">Liczba pozycji: %1$d</string>
+    <string name="no_films_matching">Brak filmów spełniających wybrane kryteria.</string>
+    <string name="delete_dialog_title">Potwierdź usunięcie</string>
+    <string name="delete_dialog_message">Czy na pewno chcesz usunąć ten film z kolekcji?</string>
+    <string name="delete_dialog_confirm_button">Usuń</string>
+    <string name="delete_dialog_dismiss_button">Anuluj</string>
+
+    <string name="film_item_poster_description">Plakat filmu</string>
+    <string name="film_item_no_poster_description">Ikona braku plakatu</string>
+    <string name="film_item_label_premiere_date">Premiera: %1$s</string>
+    <string name="film_item_label_category">Kategoria: %1$s</string>
+    <string name="film_item_label_rating">Ocena: %1$s</string>
+    <string name="film_item_rating_none">Brak</string>
+    <string name="film_item_status_unwatched">Nieobejrzane</string>
+    <string name="film_item_rating_icon_description">Ikona oceny (gwiazdka)</string>
+
+    <string name="add_film_screen_title">Dodaj nowy film</string>
+    <string name="edit_film_screen_title">Edytuj film</string>
+    <string name="add_edit_label_title">Tytuł</string>
+    <string name="add_edit_label_release_date">Data premiery</string>
+    <string name="add_edit_label_category">Kategoria</string>
+    <string name="add_edit_label_status">Status</string>
+    <string name="add_edit_status_watched">Obejrzany</string>
+    <string name="add_edit_status_unwatched">Nieobejrzany</string>
+    <string name="add_edit_label_rating">Ocena (1–10)</string>
+    <string name="add_edit_hint_rating">Wprowadź ocenę od 1 do 10</string>
+    <string name="add_edit_label_comment">Komentarz</string>
+    <string name="add_edit_label_poster">Plakat</string>
+    <string name="add_edit_select_poster_from_gallery">Wybierz plakat z galerii</string>
+    <string name="add_edit_save_button">Zapisz</string>
+    <string name="content_desc_arrow_back">Wróć</string>
+    <string name="content_desc_date_range_icon">Wybierz datę</string>
+    <string name="content_desc_arrow_drop_down">Rozwiń listę</string>
+    <string name="content_desc_play_arrow_icon">Ikona zastępcza plakatu</string>
+    <string name="delete_dialog_message_with_title">Czy na pewno chcesz usunąć \"%1$s\" z kolekcji?</string>
+
+    <string name="film_details_screen_title">Szczegóły filmu</string>
+    <string name="film_details_error_not_found">Nie znaleziono filmu.</string>
+    <string name="film_details_no_poster">Brak plakatu</string>
+    <string name="film_details_label_release_date">Data premiery: %1$s</string>
+    <string name="film_details_label_category">Kategoria: %1$s</string>
+    <string name="film_details_label_status_watched">Status: Obejrzany</string>
+    <string name="film_details_label_status_unwatched">Status: Nieobejrzany</string>
+    <string name="film_details_label_rating">Ocena: %1$s</string>
+    <string name="film_details_label_comment_section">Komentarz:</string>
+    <string name="film_details_read_only_message">Ten film jest oznaczony jako obejrzany i nie może być edytowany.</string>
+    <string name="content_desc_star_icon">Ikona gwiazdki</string>
+
+    <string name="filter_label_category">Kategoria:</string>
+    <string name="filter_label_status">Status:</string>
+    <string name="filter_option_all_categories">Wszystkie</string>
+    <string name="filter_option_all_statuses">Wszystkie</string>
+    <string name="filter_option_watched">Obejrzane</string>
+    <string name="filter_option_unwatched">Nieobejrzane</string>
+
+    <string name="validation_error_title_empty">Tytuł nie może być pusty.</string>
+    <string name="validation_error_date_too_far">Data premiery nie może być późniejsza niż 2 lata od dziś.</string>
+    <string name="validation_error_category_not_selected">Kategoria musi być wybrana.</string>
+    <string name="validation_error_rating_required_for_watched">Ocena jest wymagana dla obejrzanych filmów.</string>
+
+    <string name="category_film">Film</string>
+    <string name="category_serial">Serial</string>
+    <string name="category_documentary">Dokument</string>
+</resources>
+</file>
+
+</files>
